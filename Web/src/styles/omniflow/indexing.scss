@@ -1,0 +1,39 @@
+﻿/// <reference path="variables.scss" />
+.slider-indexing {
+  float: right;
+  height: 700px;
+  margin-top: 10px;
+}
+
+.omni-docnav {
+  /*margin-left: 10px;*/
+  margin-bottom: 5px;
+  >span {
+    height:15px;
+    width:15px;
+    font-size:1.1em;
+    font-weight: 700;
+  }
+}
+
+.docNavigation {
+  padding-top: 10px;
+  .Select-control {
+    width:260px !important;
+  }
+}
+
+.indexing-title{
+    font-size: 1.2em;
+    font-weight: 700;
+}
+
+.indexing-form {
+  width: 100%;
+  padding: 30px;
+  margin-bottom: 30px;
+}
+
+.indexing-form-green {
+  background-color: #F3F0E4;
+}

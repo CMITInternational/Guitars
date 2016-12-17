@@ -1,0 +1,9 @@
+﻿/// <reference path="variables.scss" />
+/* Responsive Fixed Data Tables */
+#table-container {
+  width:100%;
+  height: 400px;
+  .fixedDataTableLayout_main {
+    color: #000 !important;
+  }
+}

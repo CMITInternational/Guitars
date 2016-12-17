@@ -1,0 +1,29 @@
+﻿{
+    "ProjectSetting": "OmniFlow",
+    "clientAppSettings": {
+      "build": "0.0.0.0",
+      "apiUrl": "http://localhost:5259/api/",
+      "trackMetrics": false,
+      "uploadDirectory": "/uploads/",
+      "uploadChunkSize": 65536,
+      "accessRoleName": "none",
+      "refreshInterval": 1,
+      "colours": [
+        "orange",
+        "blue",
+        "yellow",
+        "green",
+        "red",
+        "violet",
+        "brown",
+        "olive",
+        "crimson",
+        "magenta",
+        "cyan",
+        "indigo",
+        "sienna",
+        "pink",
+        "teal"
+      ]
+    }
+}
