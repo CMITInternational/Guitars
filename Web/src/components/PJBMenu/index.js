@@ -9,6 +9,12 @@ class PJBMenu extends React.Component<void, void, void> {
         <Link to="/" className="menu-item">
           <p>Home</p>
         </Link>
+        <Link to="/products" className="menu-item">
+          <p>Products</p>
+        </Link>
+        <Link to="/contacts" className="menu-item">
+          <p>Contact Us</p>
+        </Link>
       </Menu>
     );
   }

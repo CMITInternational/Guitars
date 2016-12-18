@@ -14,7 +14,7 @@ class Home extends React.Component<void, IProps, void> {
   render () {
     return (
       <div>
-        <h1>Home</h1>
+        <h1>Contact Us</h1>
       </div>
     );
   }
