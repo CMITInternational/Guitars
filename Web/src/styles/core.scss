@@ -21,4 +21,31 @@
   *:after {
     box-sizing: inherit;
   }
+
+  body {
+    padding-top: 70px;
+  }
+
+  .navbar-header {
+    float: none;
+  }
+
+  .navbar-toggle {
+    display: block;
+  }
+
+  .navbar-collapse.collapse {
+    display: none !important;
+  }
+
+  .navbar-nav {
+    float: none !important;
+    > li {
+      float: none;
+    }
+  }
+
+  .navbar-collapse.collapse.in {
+    display: block !important;
+  }
 }

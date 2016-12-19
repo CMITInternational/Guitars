@@ -1,10 +1,6 @@
 import 'babel-polyfill';
 import 'es6-shim';
 import 'isomorphic-fetch';
-import 'react-select/scss/default.scss';
-import 'react-s-alert/dist/s-alert-default.css';
-import 'react-s-alert/dist/s-alert-css-effects/slide.css';
-import 'fixed-data-table/dist/fixed-data-table.min.css';
 import '../../styles/core.scss';
 import React, { PropTypes } from 'react';
 import { Provider } from 'react-redux';
