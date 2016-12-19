@@ -1,18 +1,10 @@
-import 'babel-polyfill';
-import 'es6-shim';
-import 'isomorphic-fetch';
-import 'react-select/scss/default.scss';
-import 'react-s-alert/dist/s-alert-default.css';
-import 'react-s-alert/dist/s-alert-css-effects/slide.css';
-import 'fixed-data-table/dist/fixed-data-table.min.css';
-import '../../styles/core.scss';
 import React from 'react';
 import connect from 'react-redux/lib/components/connect';
 import { bindActionCreators } from 'redux';
 import appContainerActions from './Actions';
 import Alert from 'react-s-alert';
+import { Navbar, Nav, NavItem } from 'react-bootstrap';
 import { Link } from 'react-router';
-import Menu from '../../components/PJBMenu';
 
 export class App extends React.Component {
   static propTypes = {
@@ -47,24 +39,26 @@ export class App extends React.Component {
   render () {
     return (
       <div>
-        <Menu />
-        <header className="navbar navbar-default navbar-fixed-top">
-          <div className="navbar-header">
-            <div>
-              <Link className="navbar-brand" to="/" >
-                PJB Guitars
-              </Link>
-            </div>
-          </div>
-        </header>
+        <Navbar collapseOnSelect>
+          <Navbar.Header>
+            <Navbar.Brand>
+              PJB Guitars
+            </Navbar.Brand>
+            <Navbar.Toggle />
+          </Navbar.Header>
+          <Navbar.Collapse>
+            <Nav>
+              <NavItem><Link to="/" className="menu-item">Home</Link></NavItem>
+              <NavItem><Link to="/products" className="menu-item">Products</Link></NavItem>
+              <NavItem><Link to="/contacts" className="menu-item">Contact Us</Link></NavItem>
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
         <div className="page-container">
           <div className="view-container">
             {this.props.children}
           </div>
         </div>
-        <footer className="navbar-fixed-bottom navbar-default">
-          <a className="navbar-left">&copy; CMIT International 2016</a>
-        </footer>
         <Alert stack={{limit: 5}} timeout={5000} position="bottom" spacing={50} offset={50} effect="slide" html />
       </div>
     );
