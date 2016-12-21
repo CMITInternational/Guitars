@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { PageHeader } from 'react-bootstrap';
 
 type IProps = {
   ready: boolean,
@@ -14,7 +15,7 @@ class Home extends React.Component<void, IProps, void> {
   render () {
     return (
       <div>
-        <h1>Home</h1>
+        <PageHeader>Home</PageHeader>
       </div>
     );
   }

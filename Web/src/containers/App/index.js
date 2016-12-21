@@ -4,14 +4,48 @@ import { bindActionCreators } from 'redux';
 import appContainerActions from './Actions';
 import Alert from 'react-s-alert';
 import { Navbar, Nav, NavItem } from 'react-bootstrap';
-import { Link } from 'react-router';
+import { routerActions } from 'react-router-redux';
 
 export class App extends React.Component {
   static propTypes = {
     app: React.PropTypes.shape({}),
     loadAppAsync: React.PropTypes.func.isRequired,
+    redirect: React.PropTypes.func.isRequired,
     children: React.PropTypes.element.isRequired
   };
+
+  constructor () {
+    super();
+
+    this.state = {
+      expanded: false
+    };
+
+    this.onSelect = this.onSelect.bind(this);
+    this.onToggle = this.onToggle.bind(this);
+    this.generateOnSelect = this.generateOnSelect.bind(this);
+  }
+
+  onToggle (val) {
+    console.log(`onToggle val(${JSON.stringify(val)})`);
+    this.setState({
+      expanded: val
+    });
+  }
+
+  onSelect (path) {
+    console.log(`onSelect path(${JSON.stringify(path)})`);
+    this.setState({
+      expanded: false
+    });
+    this.props.redirect(path);
+  }
+
+  generateOnSelect (path) {
+    return () => {
+      this.onSelect(path);
+    };
+  }
 
   componentWillMount () {
   }
@@ -39,7 +73,7 @@ export class App extends React.Component {
   render () {
     return (
       <div>
-        <Navbar collapseOnSelect>
+        <Navbar expanded={this.state.expanded} onToggle={this.onToggle} fixedTop>
           <Navbar.Header>
             <Navbar.Brand>
               PJB Guitars
@@ -48,9 +82,9 @@ export class App extends React.Component {
           </Navbar.Header>
           <Navbar.Collapse>
             <Nav>
-              <NavItem><Link to="/" className="menu-item">Home</Link></NavItem>
-              <NavItem><Link to="/products" className="menu-item">Products</Link></NavItem>
-              <NavItem><Link to="/contacts" className="menu-item">Contact Us</Link></NavItem>
+              <NavItem onClick={this.generateOnSelect('/')} className="menu-item">Home</NavItem>
+              <NavItem onClick={this.generateOnSelect('/products')} className="menu-item">Products</NavItem>
+              <NavItem onClick={this.generateOnSelect('/contacts')} className="menu-item">Contact Us</NavItem>
             </Nav>
           </Navbar.Collapse>
         </Navbar>
@@ -71,7 +105,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch: Function) => {
   return bindActionCreators({
-    loadAppAsync: appContainerActions.loadAppAsync
+    loadAppAsync: appContainerActions.loadAppAsync,
+    redirect: routerActions.push
   }, dispatch);
 };
 
