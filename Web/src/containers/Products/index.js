@@ -2,82 +2,69 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { PageHeader, Grid, Col, Row, Thumbnail, Button } from 'react-bootstrap';
+import { routerActions } from 'react-router-redux';
+import productsActions from './Actions';
 
 type IProps = {
-  ready: boolean,
+  guitars: {
+    data: List<{
+      id: string,
+      label: string,
+      smallDesc: string,
+      thumbUrl: string
+    }>,
+    ready: boolean
+  },
+  loadAsync: Function,
+  goToProduct: Function
 }
 
-class Home extends React.Component<void, IProps, void> {
+class Products extends React.Component<void, IProps, void> {
   static propTypes = {
-    ready: React.PropTypes.bool.isRequired
+    guitars: React.PropTypes.shape({
+      data: React.PropTypes.arrayOf(React.PropTypes.shape({
+        id: React.PropTypes.string.isRequired,
+        label: React.PropTypes.string.isRequired,
+        smallDesc: React.PropTypes.string.isRequired,
+        thumbUrl: React.PropTypes.string.isRequired
+      })).isRequired,
+      ready: React.PropTypes.bool.isRequired
+    }),
+    goToProduct: React.PropTypes.func.isRequired,
+    loadAsync: React.PropTypes.func.isRequired
   };
 
+  generateRouteToProduct = (guitar) => {
+    return () => {
+      this.props.goToProduct(guitar.id);
+    };
+  };
+
+  componentWillMount () {
+    this.props.loadAsync();
+  }
+
   render () {
+    let guitarThumbnail = (guitar) => {
+      return (
+        <Col xs={12} sm={6} md={4} lg={3} key={guitar.id}>
+          <Thumbnail src={guitar.thumbUrl}>
+            <h3>{guitar.label}</h3>
+            <p>{guitar.smallDesc}</p>
+            <p>
+              <Button onClick={this.generateRouteToProduct(guitar)} bsStyle="primary">More Details</Button>&nbsp;
+            </p>
+          </Thumbnail>
+        </Col>
+      );
+    };
+
     return (
       <div>
         <PageHeader>Products</PageHeader>
-        <Grid>
+        <Grid fluid>
           <Row>
-            <Col xs={12} sm={6} md={4} lg={3}>
-              <Thumbnail src="/assets/projects/0FF09A43-A978-48A2-BC01-08DA1E90AAC0/thumb.png">
-                <h3>Thumbnail label</h3>
-                <p>Description</p>
-                <p>
-                  <Button bsStyle="primary">Button</Button>&nbsp;
-                  <Button bsStyle="default">Button</Button>
-                </p>
-              </Thumbnail>
-            </Col>
-            <Col xs={12} sm={6} md={4} lg={3}>
-              <Thumbnail src="/assets/projects/1DEB168A-BFA7-4F1C-A4C1-CB5D152F9216/thumb.png">
-                <h3>Thumbnail label</h3>
-                <p>Description</p>
-                <p>
-                  <Button bsStyle="primary">Button</Button>&nbsp;
-                  <Button bsStyle="default">Button</Button>
-                </p>
-              </Thumbnail>
-            </Col>
-            <Col xs={12} sm={6} md={4} lg={3}>
-              <Thumbnail src="/assets/projects/02CA4768-5CEE-487A-8CA3-F711D5FF494A/thumb.jpg">
-                <h3>Thumbnail label</h3>
-                <p>Description</p>
-                <p>
-                  <Button bsStyle="primary">Button</Button>&nbsp;
-                  <Button bsStyle="default">Button</Button>
-                </p>
-              </Thumbnail>
-            </Col>
-            <Col xs={12} sm={6} md={4} lg={3}>
-              <Thumbnail src="/assets/projects/9433FDF4-410F-45AD-8ADC-2DF57271005D/thumb.png">
-                <h3>Thumbnail label</h3>
-                <p>Description</p>
-                <p>
-                  <Button bsStyle="primary">Button</Button>&nbsp;
-                  <Button bsStyle="default">Button</Button>
-                </p>
-              </Thumbnail>
-            </Col>
-            <Col xs={12} sm={6} md={4} lg={3}>
-              <Thumbnail src="/assets/projects/BBC926AA-B421-40E3-8DF9-C344C0CF64F1/thumb.png">
-                <h3>Thumbnail label</h3>
-                <p>Description</p>
-                <p>
-                  <Button bsStyle="primary">Button</Button>&nbsp;
-                  <Button bsStyle="default">Button</Button>
-                </p>
-              </Thumbnail>
-            </Col>
-            <Col xs={12} sm={6} md={4} lg={3}>
-              <Thumbnail src="/assets/projects/C8AC019E-2C0A-4978-8CC4-F9690807BF93/thumb.png">
-                <h3>Thumbnail label</h3>
-                <p>Description</p>
-                <p>
-                  <Button bsStyle="primary">Button</Button>&nbsp;
-                  <Button bsStyle="default">Button</Button>
-                </p>
-              </Thumbnail>
-            </Col>
+            {this.props.guitars.data.map(guitarThumbnail)}
           </Row>
         </Grid>
       </div>
@@ -86,12 +73,14 @@ class Home extends React.Component<void, IProps, void> {
 }
 
 const mapStateToProps = (state) => ({
-  ready: state.app.isReady
+  guitars: state.products
 });
 
 const mapDispatchToProps = (dispatch: Function) => {
   return bindActionCreators({
+    goToProduct: (id) => routerActions.push(`/product/${id}`),
+    loadAsync: productsActions.loadProductsAsync
   }, dispatch);
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(Products);

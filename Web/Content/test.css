@@ -1,0 +1,53 @@
+﻿.section-header{
+    margin-top:120px;
+    margin-bottom:60px;
+    text-align:center;
+    position:relative;
+    border-top:1px dotted #5AA9CE;
+    border-bottom:1px dotted #5AA9CE;
+}
+
+.admin-section {
+    margin-top:40px;
+    margin-bottom:20px;
+}
+
+.section-icon{
+    display:inline-block;
+    position:absolute;
+    top:-160px;
+    left:50%;
+    margin-left:-40px;
+    background-color:#5AA9CE;
+    width:80px;
+    height:80px;
+    text-align:center;
+    border-radius:50%;
+    z-index:1;
+    overflow:hidden;
+}
+
+.section-icon [class*=fa]{
+    font-size:177%;
+    line-height:80px;
+    color:#777;
+}
+
+.section-title{
+    display:inline-block;
+    position:relative;
+    top:-35px;
+    margin:0px;
+    padding:0 40px;
+    background:#fff;
+    font-size:233%;
+    line-height:64px;
+    font-weight:100;
+    text-align:center;
+	text-transform:uppercase;
+    color:#7c7c7c;
+}
+
+.section-description {
+    margin-top:-10px;
+}
