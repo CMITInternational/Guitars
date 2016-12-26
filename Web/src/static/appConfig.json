@@ -3,6 +3,7 @@
     "clientAppSettings": {
       "build": "0.0.0.0",
       "apiUrl": "http://localhost:61154/api/",
-      "assetUrl": "http://localhost:61154/"
+      "assetUrl": "http://localhost:61154/",
+      "admin": "bkllTXRlTA=="
     }
 }
