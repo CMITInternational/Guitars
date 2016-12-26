@@ -12,12 +12,37 @@ const clearAppReady = (): Action => {
   };
 };
 
+const loadAppConfig = (data): Action => {
+  return {
+    type: Keys.LOAD_APP_CONFIG,
+    payload: data
+  };
+};
+
 const loadAppAsync = (): Function => {
   return (dispatch: Function, getState: Function): Promise => {
     return new Promise((resolve: Function, reject: Function): void => {
       dispatch(clearAppReady());
-      dispatch(setAppReady());
-      resolve();
+      fetch('/appConfig.json', {
+        mode: 'cors',
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Accept': 'application/json'
+        }
+      })
+        .then((response) => {
+          if (response.status !== 200) {
+            throw new Error('appConfig fetch failed');
+          }
+          return response.json();
+        })
+        .then((json) => {
+          dispatch(loadAppConfig(json.clientAppSettings));
+          dispatch(setAppReady());
+          resolve();
+        })
+        .catch(reject);
     });
   };
 };

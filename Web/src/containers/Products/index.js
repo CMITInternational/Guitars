@@ -4,67 +4,66 @@ import { bindActionCreators } from 'redux';
 import { PageHeader, Grid, Col, Row, Thumbnail, Button } from 'react-bootstrap';
 import { routerActions } from 'react-router-redux';
 import productsActions from './Actions';
+import AppPropTypes from '../App/PropTypes';
+import type IApp from '../App/IApp';
+import GuitarListPropTypes from '../../models/GuitarListPropTypes';
+import type IGuitarList from '../../models/IGuitarList';
 
 type IProps = {
-  guitars: {
-    data: List<{
-      id: string,
-      label: string,
-      smallDesc: string,
-      thumbUrl: string
-    }>,
-    ready: boolean
-  },
+  app: IApp,
+  guitars: IGuitarList,
   loadAsync: Function,
   goToProduct: Function
 }
 
 class Products extends React.Component<void, IProps, void> {
   static propTypes = {
-    guitars: React.PropTypes.shape({
-      data: React.PropTypes.arrayOf(React.PropTypes.shape({
-        id: React.PropTypes.string.isRequired,
-        label: React.PropTypes.string.isRequired,
-        smallDesc: React.PropTypes.string.isRequired,
-        thumbUrl: React.PropTypes.string.isRequired
-      })).isRequired,
-      ready: React.PropTypes.bool.isRequired
-    }),
+    app: React.PropTypes.shape(AppPropTypes).isRequired,
+    guitars: React.PropTypes.shape(GuitarListPropTypes),
     goToProduct: React.PropTypes.func.isRequired,
     loadAsync: React.PropTypes.func.isRequired
   };
 
+  constructor (props: IProps) {
+    super(props);
+
+    this.renderGuitar = this.renderGuitar.bind(this);
+    this.generateRouteToProduct = this.generateRouteToProduct.bind(this);
+  }
+
   generateRouteToProduct = (guitar) => {
     return () => {
-      this.props.goToProduct(guitar.id);
+      this.props.goToProduct(guitar.Id);
     };
   };
 
-  componentWillMount () {
+  componentDidMount () {
     this.props.loadAsync();
   }
 
-  render () {
-    let guitarThumbnail = (guitar) => {
-      return (
-        <Col xs={12} sm={6} md={4} lg={3} key={guitar.id}>
-          <Thumbnail src={guitar.thumbUrl}>
-            <h3>{guitar.label}</h3>
-            <p>{guitar.smallDesc}</p>
-            <p>
-              <Button onClick={this.generateRouteToProduct(guitar)} bsStyle="primary">More Details</Button>&nbsp;
-            </p>
-          </Thumbnail>
-        </Col>
-      );
-    };
+  renderGuitar (guitar) {
+    let thumbUrl = `${this.props.app.assetUrl}${guitar.Path}/${guitar.Thumb}`;
 
+    return (
+      <Col xs={12} sm={6} md={4} lg={3} key={guitar.Id}>
+        <Thumbnail src={thumbUrl}>
+          <h3>{guitar.Title}</h3>
+          <p>{guitar.Description}</p>
+          <p>
+            <Button onClick={this.generateRouteToProduct(guitar)} bsStyle="primary">More Details</Button>&nbsp;
+          </p>
+        </Thumbnail>
+      </Col>
+    );
+  };
+
+  render () {
     return (
       <div>
         <PageHeader>Products</PageHeader>
         <Grid fluid>
           <Row>
-            {this.props.guitars.data.map(guitarThumbnail)}
+            {this.props.guitars.data.map(this.renderGuitar)}
           </Row>
         </Grid>
       </div>
@@ -73,6 +72,7 @@ class Products extends React.Component<void, IProps, void> {
 }
 
 const mapStateToProps = (state) => ({
+  app: state.app,
   guitars: state.products
 });
 

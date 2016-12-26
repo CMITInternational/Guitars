@@ -6,11 +6,17 @@ const ACTION_HANDLERS = {
   }),
   [Keys.SET_APP_READY]: (state: Object, action: Action): Object => Object.assign({}, state, {
     isReady: true
+  }),
+  [Keys.LOAD_APP_CONFIG]: (state: Object, action: Action): Object => Object.assign({}, state, {
+    apiUrl: action.payload.apiUrl,
+    assetUrl: action.payload.assetUrl
   })
 };
 
 export const initialState = {
-  isReady: false
+  isReady: false,
+  apiUrl: 'api/',
+  assetUrl: ''
 };
 
 export default function appReducer (state: object = initialState, action: Action): object {

@@ -5,17 +5,26 @@ import appContainerActions from './Actions';
 import Alert from 'react-s-alert';
 import { Navbar, Nav, NavItem } from 'react-bootstrap';
 import { routerActions } from 'react-router-redux';
+import AppPropTypes from './PropTypes';
+import type IApp from './IApp';
+
+type IProps = {
+  app: IApp,
+  loadAppAsync: Function,
+  redirect: Function,
+  children: any
+}
 
 export class App extends React.Component {
   static propTypes = {
-    app: React.PropTypes.shape({}),
+    app: React.PropTypes.shape(AppPropTypes),
     loadAppAsync: React.PropTypes.func.isRequired,
     redirect: React.PropTypes.func.isRequired,
     children: React.PropTypes.element.isRequired
   };
 
-  constructor () {
-    super();
+  constructor (props: IProps) {
+    super(props);
 
     this.state = {
       expanded: false
@@ -71,7 +80,8 @@ export class App extends React.Component {
   }
 
   render () {
-    return (
+    return (this.props.app.isReady)
+    ? (
       <div>
         <Navbar expanded={this.state.expanded} onToggle={this.onToggle} fixedTop>
           <Navbar.Header>
@@ -95,7 +105,8 @@ export class App extends React.Component {
         </div>
         <Alert stack={{limit: 5}} timeout={5000} position="bottom" spacing={50} offset={50} effect="slide" html />
       </div>
-    );
+    )
+    : null;
   }
 }
 

@@ -129,7 +129,6 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="admin.html" />
     <Content Include="App\Admin\About\ImageUpload\about.imageupload.html" />
     <Content Include="App\Admin\About\ImageUpload\AboutImageUploadController.js" />
     <Content Include="App\Admin\AdminController.js" />
@@ -425,6 +424,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="googlef8bcd6e486a92ad4.html" />
+    <Content Include="index.html" />
     <Content Include="Scripts\angular-animate.js" />
     <Content Include="Scripts\angular-animate.min.js" />
     <Content Include="Scripts\angular-aria.js" />
@@ -1303,7 +1303,6 @@
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
-    <Content Include="test.html" />
     <Content Include="ws.ashx" />
   </ItemGroup>
   <ItemGroup>
@@ -1335,7 +1334,6 @@
     <Content Include="assets\projects\project-slide-placeholder.png" />
     <Content Include="assets\projects\project-thumb-placeholder.png" />
     <Content Include="fonts\fontawesome-webfont.svg" />
-    <Content Include="index.html" />
     <Content Include="Scripts\jquery.backstretch.js" />
     <Content Include="Scripts\jquery.backstretch.min.js" />
     <Content Include="Scripts\jquery.fitvids.js" />
@@ -1358,6 +1356,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\AutoMapperConfig.cs" />
+    <Compile Include="App_Start\RouteConfog.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AboutController.cs" />
     <Compile Include="Controllers\ApiControllerBase.cs" />
@@ -1387,6 +1386,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="assets\phillipjbuttrose\" />
+    <Folder Include="dist\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
