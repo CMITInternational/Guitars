@@ -3,11 +3,12 @@ import connect from 'react-redux/lib/components/connect';
 import { bindActionCreators } from 'redux';
 import appActions from './Actions';
 import Alert from 'react-s-alert';
-import { Navbar, Modal, Button } from 'react-bootstrap';
+import { Navbar, Modal, ButtonInput } from 'react-bootstrap';
 import { routerActions } from 'react-router-redux';
 import AppPropTypes from './PropTypes';
 import type IApp from './IApp';
 import Menu from 'react-burger-menu/lib/menus/stack';
+import { Form, ValidatedInput } from 'react-bootstrap-validation';
 
 type IProps = {
   app: IApp,
@@ -36,8 +37,17 @@ export class App extends React.Component {
     };
 
     this.hideAuthModal = this.hideAuthModal.bind(this);
+    this.showAuthModal = this.showAuthModal.bind(this);
     this.generateOnSelect = this.generateOnSelect.bind(this);
     this.onMenuStateChange = this.onMenuStateChange.bind(this);
+    this.onValidAuth = this.onValidAuth.bind(this);
+  }
+
+  onValidAuth (values) {
+    this.props.authenticateAsAdmin(values.password)
+      .catch(() => {
+        Alert.error('Authentication Failed');
+      });
   }
 
   onMenuStateChange (state) {
@@ -56,6 +66,12 @@ export class App extends React.Component {
 
   hideAuthModal () {
     this.props.showAuth(false);
+  }
+
+  showAuthModal () {
+    this.setState({
+      expanded: false
+    }, () => { this.props.showAuth(true); });
   }
 
   componentWillMount () {
@@ -89,6 +105,7 @@ export class App extends React.Component {
           <div onClick={this.generateOnSelect('/')} className="menu-item">Home</div>
           <div onClick={this.generateOnSelect('/products')} className="menu-item">Products</div>
           <div onClick={this.generateOnSelect('/contacts')} className="menu-item">Contact Us</div>
+          <div onClick={this.showAuthModal} className="menu-item">Admin</div>
         </Menu>
         <Navbar fixedTop>
           <Navbar.Header>
@@ -101,7 +118,25 @@ export class App extends React.Component {
         <Modal show={this.props.app.showAuth} bsSize="lg" onHide={this.hideAuthModal}>
           <Modal.Title>Admin Authentication</Modal.Title>
           <Modal.Body>
-            <Button onClick={this.hideAuthModal}>Go</Button>
+            <Form onValidSubmit={this.onValidAuth}>
+              <ValidatedInput
+                type="password"
+                name="password"
+                label="Password"
+                // You can pass params to validation rules
+                validate="required,isLength:7"
+                errorHelp={{
+                  required: 'Please specify a password',
+                  isLength: 'Password must be 7 characters'
+                }}
+              />
+              <ButtonInput
+                type="submit"
+                bsSize="large"
+                bsStyle="primary"
+                value="Login"
+              />
+            </Form>
           </Modal.Body>
         </Modal>
         <div className="page-container">

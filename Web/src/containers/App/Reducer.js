@@ -26,6 +26,7 @@ export const initialState = {
   assetUrl: '',
   admin: '',
   showAuth: false,
+  showAuthError: false,
   isAdmin: false
 };
 
