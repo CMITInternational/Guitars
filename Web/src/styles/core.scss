@@ -2,6 +2,7 @@
   @import 'base';
   @import 'vendor/normalize';
   @import 'vendor/daterangepicker';
+  @import 'burger-menu';
 
   // Some best-practice CSS that's useful for most apps
   // Just remove them if they're not what you want
@@ -26,26 +27,26 @@
   //  padding-top: 70px;
   //}
 
-  .navbar-header {
-    float: none;
-  }
-
-  .navbar-toggle {
-    display: block;
-  }
-
-  .navbar-collapse.collapse {
-    display: none !important;
-  }
-
-  .navbar-nav {
-    float: none !important;
-    > li {
-      float: none;
-    }
-  }
-
-  .navbar-collapse.collapse.in {
-    display: block !important;
-  }
+  //.navbar-header {
+  //  float: none;
+  //}
+  //
+  //.navbar-toggle {
+  //  display: block;
+  //}
+  //
+  //.navbar-collapse.collapse {
+  //  display: none !important;
+  //}
+  //
+  //.navbar-nav {
+  //  float: none !important;
+  //  > li {
+  //    float: none;
+  //  }
+  //}
+  //
+  //.navbar-collapse.collapse.in {
+  //  display: block !important;
+  //}
 }

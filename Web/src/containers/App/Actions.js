@@ -1,4 +1,5 @@
 import Keys from './Keys';
+import reverse from 'reverse-string';
 
 const setAppReady = (): Action => {
   return {
@@ -47,8 +48,39 @@ const loadAppAsync = (): Function => {
   };
 };
 
+const showAuth = (data): Action => {
+  return {
+    type: Keys.SHOW_AUTH,
+    payload: data
+  };
+};
+
+const isAdmin = (data): Action => {
+  return {
+    type: Keys.SET_IS_ADMIN,
+    payload: data
+  };
+};
+
+const authenticateAsAdmin = (password): Function => {
+  return (dispatch: Function, getState: Function): Promise => {
+    return new Promise((resolve: Function, reject: Function): void => {
+      let adminPassword = reverse(atob(getState().app.admin));
+      if (adminPassword === password) {
+        dispatch(isAdmin(true));
+        resolve();
+      } else {
+        dispatch(isAdmin(false));
+        reject();
+      }
+    });
+  };
+};
+
 const Actions = {
-  loadAppAsync
+  loadAppAsync,
+  showAuth,
+  authenticateAsAdmin
 };
 
 export default Actions;

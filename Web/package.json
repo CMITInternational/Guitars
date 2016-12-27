@@ -121,7 +121,8 @@
     "redux-devtools-log-monitor": "^1.0.1",
     "redux-logger": "^2.7.4",
     "redux-thunk": "^2.0.0",
-    "responsive-fixed-data-table": "^2.0.0"
+    "responsive-fixed-data-table": "^2.0.0",
+    "reverse-string": "0.0.6"
   },
   "devDependencies": {
     "babel-cli": "^6.5.1",

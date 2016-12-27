@@ -1,16 +1,19 @@
 import React from 'react';
 import connect from 'react-redux/lib/components/connect';
 import { bindActionCreators } from 'redux';
-import appContainerActions from './Actions';
+import appActions from './Actions';
 import Alert from 'react-s-alert';
-import { Navbar, Nav, NavItem } from 'react-bootstrap';
+import { Navbar, Modal, Button } from 'react-bootstrap';
 import { routerActions } from 'react-router-redux';
 import AppPropTypes from './PropTypes';
 import type IApp from './IApp';
+import Menu from 'react-burger-menu/lib/menus/stack';
 
 type IProps = {
   app: IApp,
   loadAppAsync: Function,
+  showAuth: Function,
+  authenticateAsAdmin: Function,
   redirect: Function,
   children: any
 }
@@ -20,6 +23,8 @@ export class App extends React.Component {
     app: React.PropTypes.shape(AppPropTypes),
     loadAppAsync: React.PropTypes.func.isRequired,
     redirect: React.PropTypes.func.isRequired,
+    showAuth: React.PropTypes.func.isRequired,
+    authenticateAsAdmin: React.PropTypes.func.isRequired,
     children: React.PropTypes.element.isRequired
   };
 
@@ -30,30 +35,27 @@ export class App extends React.Component {
       expanded: false
     };
 
-    this.onSelect = this.onSelect.bind(this);
-    this.onToggle = this.onToggle.bind(this);
+    this.hideAuthModal = this.hideAuthModal.bind(this);
     this.generateOnSelect = this.generateOnSelect.bind(this);
+    this.onMenuStateChange = this.onMenuStateChange.bind(this);
   }
 
-  onToggle (val) {
-    console.log(`onToggle val(${JSON.stringify(val)})`);
+  onMenuStateChange (state) {
     this.setState({
-      expanded: val
+      expanded: state.isOpen
     });
-  }
-
-  onSelect (path) {
-    console.log(`onSelect path(${JSON.stringify(path)})`);
-    this.setState({
-      expanded: false
-    });
-    this.props.redirect(path);
   }
 
   generateOnSelect (path) {
     return () => {
-      this.onSelect(path);
+      this.setState({
+        expanded: false
+      }, () => { this.props.redirect(path); });
     };
+  }
+
+  hideAuthModal () {
+    this.props.showAuth(false);
   }
 
   componentWillMount () {
@@ -83,21 +85,25 @@ export class App extends React.Component {
     return (this.props.app.isReady)
     ? (
       <div>
-        <Navbar expanded={this.state.expanded} onToggle={this.onToggle} fixedTop>
+        <Menu right isOpen={this.state.expanded} onStateChange={this.onMenuStateChange}>
+          <div onClick={this.generateOnSelect('/')} className="menu-item">Home</div>
+          <div onClick={this.generateOnSelect('/products')} className="menu-item">Products</div>
+          <div onClick={this.generateOnSelect('/contacts')} className="menu-item">Contact Us</div>
+        </Menu>
+        <Navbar fixedTop>
           <Navbar.Header>
             <Navbar.Brand>
               PJB Guitars
             </Navbar.Brand>
             <Navbar.Toggle />
           </Navbar.Header>
-          <Navbar.Collapse>
-            <Nav>
-              <NavItem onClick={this.generateOnSelect('/')} className="menu-item">Home</NavItem>
-              <NavItem onClick={this.generateOnSelect('/products')} className="menu-item">Products</NavItem>
-              <NavItem onClick={this.generateOnSelect('/contacts')} className="menu-item">Contact Us</NavItem>
-            </Nav>
-          </Navbar.Collapse>
         </Navbar>
+        <Modal show={this.props.app.showAuth} bsSize="lg" onHide={this.hideAuthModal}>
+          <Modal.Title>Admin Authentication</Modal.Title>
+          <Modal.Body>
+            <Button onClick={this.hideAuthModal}>Go</Button>
+          </Modal.Body>
+        </Modal>
         <div className="page-container">
           <div className="view-container">
             {this.props.children}
@@ -116,8 +122,10 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch: Function) => {
   return bindActionCreators({
-    loadAppAsync: appContainerActions.loadAppAsync,
-    redirect: routerActions.push
+    loadAppAsync: appActions.loadAppAsync,
+    redirect: routerActions.push,
+    showAuth: appActions.showAuth,
+    authenticateAsAdmin: appActions.authenticateAsAdmin
   }, dispatch);
 };
 
