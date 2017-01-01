@@ -9,7 +9,6 @@ import AppPropTypes from './PropTypes';
 import type IApp from './IApp';
 import Menu from 'react-burger-menu/lib/menus/stack';
 import { Form, ValidatedInput } from 'react-bootstrap-validation';
-import ToggleDisplay from 'react-toggle-display';
 
 type IProps = {
   app: IApp,
@@ -112,6 +111,9 @@ export class App extends React.Component {
 
   render () {
     let brand = `PJB Guitars ${(this.props.app.isAdmin) ? '(Admin)' : ''}`;
+    let logInButton = (this.props.app.isAdmin === false)
+      ? (<div onClick={this.logIn} className="menu-item">Admin</div>)
+      : (<div onClick={this.logOut} className="menu-item">LogOut</div>);
 
     return (this.props.app.isReady)
     ? (
@@ -120,12 +122,7 @@ export class App extends React.Component {
           <div onClick={this.generateOnSelect('/')} className="menu-item">Home</div>
           <div onClick={this.generateOnSelect('/products')} className="menu-item">Products</div>
           <div onClick={this.generateOnSelect('/contacts')} className="menu-item">Contact Us</div>
-          <ToggleDisplay hide={this.props.app.isAdmin} >
-            <div onClick={this.logIn} className="menu-item">Admin</div>
-          </ToggleDisplay>
-          <ToggleDisplay show={this.props.app.isAdmin} >
-            <div onClick={this.logOut} className="menu-item">LogOut</div>
-          </ToggleDisplay>
+          {logInButton}
         </Menu>
         <Navbar fixedTop>
           <Navbar.Header>
