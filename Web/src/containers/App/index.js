@@ -9,11 +9,13 @@ import AppPropTypes from './PropTypes';
 import type IApp from './IApp';
 import Menu from 'react-burger-menu/lib/menus/stack';
 import { Form, ValidatedInput } from 'react-bootstrap-validation';
+import ToggleDisplay from 'react-toggle-display';
 
 type IProps = {
   app: IApp,
   loadAppAsync: Function,
   showAuth: Function,
+  logOut: Function,
   authenticateAsAdmin: Function,
   redirect: Function,
   children: any
@@ -25,6 +27,7 @@ export class App extends React.Component {
     loadAppAsync: React.PropTypes.func.isRequired,
     redirect: React.PropTypes.func.isRequired,
     showAuth: React.PropTypes.func.isRequired,
+    logOut: React.PropTypes.func.isRequired,
     authenticateAsAdmin: React.PropTypes.func.isRequired,
     children: React.PropTypes.element.isRequired
   };
@@ -37,7 +40,8 @@ export class App extends React.Component {
     };
 
     this.hideAuthModal = this.hideAuthModal.bind(this);
-    this.showAuthModal = this.showAuthModal.bind(this);
+    this.logIn = this.logIn.bind(this);
+    this.logOut = this.logOut.bind(this);
     this.generateOnSelect = this.generateOnSelect.bind(this);
     this.onMenuStateChange = this.onMenuStateChange.bind(this);
     this.onValidAuth = this.onValidAuth.bind(this);
@@ -45,6 +49,9 @@ export class App extends React.Component {
 
   onValidAuth (values) {
     this.props.authenticateAsAdmin(values.password)
+      .then(() => {
+        this.hideAuthModal();
+      })
       .catch(() => {
         Alert.error('Authentication Failed');
       });
@@ -68,10 +75,16 @@ export class App extends React.Component {
     this.props.showAuth(false);
   }
 
-  showAuthModal () {
+  logIn () {
     this.setState({
       expanded: false
     }, () => { this.props.showAuth(true); });
+  }
+
+  logOut () {
+    this.setState({
+      expanded: false
+    }, () => { this.props.logOut(false); });
   }
 
   componentWillMount () {
@@ -98,6 +111,8 @@ export class App extends React.Component {
   }
 
   render () {
+    let brand = `PJB Guitars ${(this.props.app.isAdmin) ? '(Admin)' : ''}`;
+
     return (this.props.app.isReady)
     ? (
       <div>
@@ -105,12 +120,17 @@ export class App extends React.Component {
           <div onClick={this.generateOnSelect('/')} className="menu-item">Home</div>
           <div onClick={this.generateOnSelect('/products')} className="menu-item">Products</div>
           <div onClick={this.generateOnSelect('/contacts')} className="menu-item">Contact Us</div>
-          <div onClick={this.showAuthModal} className="menu-item">Admin</div>
+          <ToggleDisplay hide={this.props.app.isAdmin} >
+            <div onClick={this.logIn} className="menu-item">Admin</div>
+          </ToggleDisplay>
+          <ToggleDisplay show={this.props.app.isAdmin} >
+            <div onClick={this.logOut} className="menu-item">LogOut</div>
+          </ToggleDisplay>
         </Menu>
         <Navbar fixedTop>
           <Navbar.Header>
             <Navbar.Brand>
-              PJB Guitars
+              {brand}
             </Navbar.Brand>
             <Navbar.Toggle />
           </Navbar.Header>
@@ -160,6 +180,7 @@ const mapDispatchToProps = (dispatch: Function) => {
     loadAppAsync: appActions.loadAppAsync,
     redirect: routerActions.push,
     showAuth: appActions.showAuth,
+    logOut: appActions.logOut,
     authenticateAsAdmin: appActions.authenticateAsAdmin
   }, dispatch);
 };

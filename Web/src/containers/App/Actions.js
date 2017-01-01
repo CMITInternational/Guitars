@@ -77,9 +77,19 @@ const authenticateAsAdmin = (password): Function => {
   };
 };
 
+const logOut = () => {
+  return (dispatch: Function, getState: Function): Promise => {
+    return new Promise((resolve: Function, reject: Function): void => {
+      dispatch(isAdmin(false));
+      resolve();
+    });
+  };
+};
+
 const Actions = {
   loadAppAsync,
   showAuth,
+  logOut,
   authenticateAsAdmin
 };
 
