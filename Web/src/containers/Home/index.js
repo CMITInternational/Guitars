@@ -5,9 +5,12 @@ import { button } from 'react-bootstrap';
 import appActions from '../App/Actions';
 import type IApp from '../App/IApp';
 import appPropTypes from '../App/PropTypes';
+import Center from 'react-center';
 
 type IProps = {
   app: IApp,
+  containerWidth: number,
+  containerHeight: number,
   showHeader: Function,
   redirectToProducts: Function
 }
@@ -15,6 +18,8 @@ type IProps = {
 class Home extends React.Component<void, IProps, void> {
   static propTypes = {
     app: React.PropTypes.shape(appPropTypes).isRequired,
+    containerWidth: React.PropTypes.number.isRequired,
+    containerHeight: React.PropTypes.number.isRequired,
     showHeader: React.PropTypes.func.isRequired,
     redirectToProducts: React.PropTypes.func.isRequired
   };
@@ -55,9 +60,7 @@ class Home extends React.Component<void, IProps, void> {
 
   componentWillMount () {
     this.props.showHeader(false);
-  }
-
-  componentDidMount () {
+    this.setBackImage();
     if (this.state.backImage.processId === undefined) {
       let setBackImageProcId = setInterval(this.setBackImage, 3000);
       this.setState({
@@ -66,6 +69,9 @@ class Home extends React.Component<void, IProps, void> {
         })
       });
     }
+  }
+
+  componentDidMount () {
   }
 
   componentWillUnmount () {
@@ -89,14 +95,18 @@ class Home extends React.Component<void, IProps, void> {
 
     return (
       <div style={divStyle}>
-        <button style={{background: 'none', border: 'none'}} onClick={this.props.redirectToProducts}>Enter</button>
+        <Center style={{height: '100%'}}>
+          <button style={{background: 'none', border: 'none'}} onClick={this.props.redirectToProducts}>Enter</button>
+        </Center>
       </div>
     );
   }
 }
 
-const mapStateToProps = (state) => ({
-  app: state.app
+const mapStateToProps = (state, ownProps) => ({
+  app: state.app,
+  containerWidth: ownProps.containerWidth,
+  containerHeight: ownProps.containerHeight
 });
 
 const mapDispatchToProps = (dispatch: Function) => {
