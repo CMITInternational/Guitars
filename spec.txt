@@ -1,0 +1,29 @@
+Page 1 opening page as is; with “click here to enter”
+Page 2 “product page” page of photos of guitars and title under. Two side by side scrollable page.  Click on photo for information.  Transfer to individual guitar page.
+Individual guitar page enlargement of individual guitar two photos with 540 letter free style description (return to page 2 button & go to page 3 button)
+Page 3 contract details, purchase details (I’ll have to write this free hand text for inclusion)
+ 
+Should work on mobile tablet and desktop.  If the opening page is difficult simplify it to a still with a directory down the side?
+
+======
+
+The admin pack should have three main editorial areas
+Page 2 (Products page) should look basically like attachment 1.  2 rows of photos with a name beneath.  The functions I would like to be able to carry out from this page are: (Menu?) add a new product,  edit an existing product,  delete a product,  update webpage.  I don’t know if a search facility is necessary as there will only be about 20 guitars at the most on it at any one time.
+ 
+Add a new product:  Click on next blank foto/name frame 
+This should then take me to a new individual product page ( see attachment 2) where I can free style type in the name, and download individually from the directory on my computer two photos.   I can also free style type a description of the guitar and any other notes into the description frame.  I should click on a button called save, this should save edited frames and this will take me back to Page two.  The number 1 foto and the name from the individual product page should appear in the frame originally clicked.
+ 
+Edit an existing product:  Click on an existing foto/name frame
+This should take me into the existing individual product page where I can delete an existing foto and replace with another from the computer directory.  Also click on description and make editorial changes to text in the frame. I would not want to edit the name.  I should click on a button called save, this should save edited frames and this will take me back to Page two. 
+ 
+Delete a product: Click on an existing foto/name frame
+A message should appear saying “do you want to delete product “name”  “ yes / No”.  If “yes” product is removed from page 2;  the page restructures its self without the deleted product?.  I should be asked to save page 2 before proceeding.    If “no” message is removed and original menu appears.
+ 
+Update Webpage:   Click on menu button
+A message should appear saying “do you want to update webpage”   “ yes / No”.  If “yes” all current detail from the admin pack is transferred to the live web page;   If “no” message is removed and original menu appears.
+ 
+The update should include the latest editorial changes, but not include any empty frames.
+ 
+Page 3 Contact details:  I’ll leave you to design and so on. However, I will need to be able to edit email addresses,  telephone numbers and snail mail addresses.
+ 
+Page 3 will also need an editable  frame for free text to describe the arrangements for purchasing, payment and return.

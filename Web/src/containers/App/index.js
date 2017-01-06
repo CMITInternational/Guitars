@@ -110,10 +110,10 @@ export class App extends React.Component {
   }
 
   render () {
-    let brand = `PJB Guitars ${(this.props.app.isAdmin) ? '(Admin)' : ''}`;
     let logInButton = (this.props.app.isAdmin === false)
       ? (<Button bsSize="small" onClick={this.logIn}><Glyphicon glyph="wrench" /></Button>)
-      : null;
+      : `${(this.props.app.isAdmin) ? '(Admin)' : ''}`;
+    let brand = (<div>Phillip J Buttrose Pty Ltd / Australian Handcrafted Guitars {logInButton}</div>);
     let logOutButton = (this.props.app.isAdmin === true)
       ? (<div onClick={this.logOut} className="menu-item">LogOut</div>)
       : (<div />);
@@ -130,7 +130,7 @@ export class App extends React.Component {
         <Navbar fixedTop>
           <Navbar.Header>
             <Navbar.Brand>
-              {brand}{logInButton}
+              {brand}
             </Navbar.Brand>
             <Navbar.Toggle />
           </Navbar.Header>
