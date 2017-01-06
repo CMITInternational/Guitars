@@ -3,7 +3,7 @@ import connect from 'react-redux/lib/components/connect';
 import { bindActionCreators } from 'redux';
 import appActions from './Actions';
 import Alert from 'react-s-alert';
-import { Navbar, Modal, ButtonInput } from 'react-bootstrap';
+import { Navbar, Modal, ButtonInput, Glyphicon, Button } from 'react-bootstrap';
 import { routerActions } from 'react-router-redux';
 import AppPropTypes from './PropTypes';
 import type IApp from './IApp';
@@ -112,8 +112,11 @@ export class App extends React.Component {
   render () {
     let brand = `PJB Guitars ${(this.props.app.isAdmin) ? '(Admin)' : ''}`;
     let logInButton = (this.props.app.isAdmin === false)
-      ? (<div onClick={this.logIn} className="menu-item">Admin</div>)
-      : (<div onClick={this.logOut} className="menu-item">LogOut</div>);
+      ? (<Button bsSize="small" onClick={this.logIn}><Glyphicon glyph="wrench" /></Button>)
+      : null;
+    let logOutButton = (this.props.app.isAdmin === true)
+      ? (<div onClick={this.logOut} className="menu-item">LogOut</div>)
+      : (<div />);
 
     return (this.props.app.isReady)
     ? (
@@ -122,12 +125,12 @@ export class App extends React.Component {
           <div onClick={this.generateOnSelect('/')} className="menu-item">Home</div>
           <div onClick={this.generateOnSelect('/products')} className="menu-item">Products</div>
           <div onClick={this.generateOnSelect('/contacts')} className="menu-item">Contact Us</div>
-          {logInButton}
+          {logOutButton}
         </Menu>
         <Navbar fixedTop>
           <Navbar.Header>
             <Navbar.Brand>
-              {brand}
+              {brand}{logInButton}
             </Navbar.Brand>
             <Navbar.Toggle />
           </Navbar.Header>
