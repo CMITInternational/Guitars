@@ -6,6 +6,7 @@ const AppPropTypes = {
   isReady: React.PropTypes.bool.isRequired,
   admin: React.PropTypes.string.isRequired,
   showAuth: React.PropTypes.bool.isRequired,
+  showHeader: React.PropTypes.bool.isRequired,
   isAdmin: React.PropTypes.bool.isRequired
 };
 

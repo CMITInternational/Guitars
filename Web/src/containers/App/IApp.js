@@ -4,6 +4,7 @@ type IApp = {
   isReady: boolean,
   admin: string,
   showAuth: boolean,
+  showHeader: boolean,
   isAdmin: boolean
 };
 

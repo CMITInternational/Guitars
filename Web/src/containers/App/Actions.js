@@ -1,5 +1,6 @@
 import Keys from './Keys';
 import reverse from 'reverse-string';
+import { routerActions } from 'react-router-redux';
 
 const setAppReady = (): Action => {
   return {
@@ -55,6 +56,13 @@ const showAuth = (data): Action => {
   };
 };
 
+const showHeader = (data): Action => {
+  return {
+    type: Keys.SHOW_HEADER,
+    payload: data
+  };
+};
+
 const isAdmin = (data): Action => {
   return {
     type: Keys.SET_IS_ADMIN,
@@ -86,11 +94,52 @@ const logOut = () => {
   };
 };
 
+const redirectToProducts = () => {
+  return (dispatch: Function, getState: Function): Promise => {
+    return new Promise((resolve: Function, reject: Function): void => {
+      dispatch(routerActions.push('/products'));
+      resolve();
+    });
+  };
+};
+
+const redirectToContactUs = () => {
+  return (dispatch: Function, getState: Function): Promise => {
+    return new Promise((resolve: Function, reject: Function): void => {
+      dispatch(routerActions.push('/contacts'));
+      resolve();
+    });
+  };
+};
+
+const redirectToHome = () => {
+  return (dispatch: Function, getState: Function): Promise => {
+    return new Promise((resolve: Function, reject: Function): void => {
+      dispatch(routerActions.push('/'));
+      resolve();
+    });
+  };
+};
+
+const redirectToProduct = (id: number) => {
+  return (dispatch: Function, getState: Function): Promise => {
+    return new Promise((resolve: Function, reject: Function): void => {
+      dispatch(routerActions.push(`/product/${id}`));
+      resolve();
+    });
+  };
+};
+
 const Actions = {
   loadAppAsync,
   showAuth,
+  showHeader,
   logOut,
-  authenticateAsAdmin
+  authenticateAsAdmin,
+  redirectToProducts,
+  redirectToContactUs,
+  redirectToHome,
+  redirectToProduct
 };
 
 export default Actions;

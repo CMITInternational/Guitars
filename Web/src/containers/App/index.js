@@ -4,7 +4,6 @@ import { bindActionCreators } from 'redux';
 import appActions from './Actions';
 import Alert from 'react-s-alert';
 import { Navbar, Modal, ButtonInput, Glyphicon, Button } from 'react-bootstrap';
-import { routerActions } from 'react-router-redux';
 import AppPropTypes from './PropTypes';
 import type IApp from './IApp';
 import Menu from 'react-burger-menu/lib/menus/stack';
@@ -16,7 +15,9 @@ type IProps = {
   showAuth: Function,
   logOut: Function,
   authenticateAsAdmin: Function,
-  redirect: Function,
+  redirectToHome: Function,
+  redirectToProducts: Function,
+  redirectToContactUs: Function,
   children: any
 }
 
@@ -24,7 +25,9 @@ export class App extends React.Component {
   static propTypes = {
     app: React.PropTypes.shape(AppPropTypes),
     loadAppAsync: React.PropTypes.func.isRequired,
-    redirect: React.PropTypes.func.isRequired,
+    redirectToHome: React.PropTypes.func.isRequired,
+    redirectToProducts: React.PropTypes.func.isRequired,
+    redirectToContactUs: React.PropTypes.func.isRequired,
     showAuth: React.PropTypes.func.isRequired,
     logOut: React.PropTypes.func.isRequired,
     authenticateAsAdmin: React.PropTypes.func.isRequired,
@@ -41,9 +44,13 @@ export class App extends React.Component {
     this.hideAuthModal = this.hideAuthModal.bind(this);
     this.logIn = this.logIn.bind(this);
     this.logOut = this.logOut.bind(this);
-    this.generateOnSelect = this.generateOnSelect.bind(this);
+    this.generateRedirectToHome = this.generateRedirectToHome.bind(this);
+    this.generateRedirectToProducts = this.generateRedirectToProducts.bind(this);
+    this.generateRedirectToContactUs = this.generateRedirectToContactUs.bind(this);
     this.onMenuStateChange = this.onMenuStateChange.bind(this);
     this.onValidAuth = this.onValidAuth.bind(this);
+    this.renderLoginModal = this.renderLoginModal.bind(this);
+    this.renderHeader = this.renderHeader.bind(this);
   }
 
   onValidAuth (values) {
@@ -62,11 +69,27 @@ export class App extends React.Component {
     });
   }
 
-  generateOnSelect (path) {
+  generateRedirectToHome () {
     return () => {
       this.setState({
         expanded: false
-      }, () => { this.props.redirect(path); });
+      }, () => { this.props.redirectToHome(); });
+    };
+  }
+
+  generateRedirectToProducts () {
+    return () => {
+      this.setState({
+        expanded: false
+      }, () => { this.props.redirectToProducts(); });
+    };
+  }
+
+  generateRedirectToContactUs () {
+    return () => {
+      this.setState({
+        expanded: false
+      }, () => { this.props.redirectToContactUs(); });
     };
   }
 
@@ -109,56 +132,74 @@ export class App extends React.Component {
   componentDidUpdate (prevProps, prevState) {
   }
 
-  render () {
+  renderLoginModal () {
+    return (
+      <Modal show={this.props.app.showAuth} bsSize="lg" onHide={this.hideAuthModal}>
+        <Modal.Title>Admin Authentication</Modal.Title>
+        <Modal.Body>
+          <Form onValidSubmit={this.onValidAuth}>
+            <ValidatedInput
+              type="password"
+              name="password"
+              label="Password"
+              // You can pass params to validation rules
+              validate="required,isLength:7"
+              errorHelp={{
+                required: 'Please specify a password',
+                isLength: 'Password must be 7 characters'
+              }}
+            />
+            <ButtonInput
+              type="submit"
+              bsSize="large"
+              bsStyle="primary"
+              value="Login"
+            />
+          </Form>
+        </Modal.Body>
+      </Modal>
+    );
+  }
+
+  renderHeader () {
+    let logOutButton = (this.props.app.isAdmin === true)
+      ? (<div onClick={this.logOut} className="menu-item">LogOut</div>)
+      : (<div />);
     let logInButton = (this.props.app.isAdmin === false)
       ? (<Button bsSize="small" onClick={this.logIn}><Glyphicon glyph="wrench" /></Button>)
       : `${(this.props.app.isAdmin) ? '(Admin)' : ''}`;
     let brand = (<div>Phillip J Buttrose Pty Ltd / Australian Handcrafted Guitars {logInButton}</div>);
-    let logOutButton = (this.props.app.isAdmin === true)
-      ? (<div onClick={this.logOut} className="menu-item">LogOut</div>)
-      : (<div />);
 
+    if (this.props.app.showHeader) {
+      return (
+        <div>
+          <Menu right isOpen={this.state.expanded} onStateChange={this.onMenuStateChange}>
+            <div onClick={this.generateRedirectToHome()} className="menu-item">Home</div>
+            <div onClick={this.generateRedirectToProducts()} className="menu-item">Products</div>
+            <div onClick={this.generateRedirectToContactUs()} className="menu-item">Contact Us</div>
+            {logOutButton}
+          </Menu>
+          <Navbar fixedTop>
+            <Navbar.Header>
+              <Navbar.Brand>
+                {brand}
+              </Navbar.Brand>
+              <Navbar.Toggle />
+            </Navbar.Header>
+          </Navbar>
+        </div>
+      );
+    } else {
+      return null;
+    }
+  }
+
+  render () {
     return (this.props.app.isReady)
     ? (
       <div>
-        <Menu right isOpen={this.state.expanded} onStateChange={this.onMenuStateChange}>
-          <div onClick={this.generateOnSelect('/')} className="menu-item">Home</div>
-          <div onClick={this.generateOnSelect('/products')} className="menu-item">Products</div>
-          <div onClick={this.generateOnSelect('/contacts')} className="menu-item">Contact Us</div>
-          {logOutButton}
-        </Menu>
-        <Navbar fixedTop>
-          <Navbar.Header>
-            <Navbar.Brand>
-              {brand}
-            </Navbar.Brand>
-            <Navbar.Toggle />
-          </Navbar.Header>
-        </Navbar>
-        <Modal show={this.props.app.showAuth} bsSize="lg" onHide={this.hideAuthModal}>
-          <Modal.Title>Admin Authentication</Modal.Title>
-          <Modal.Body>
-            <Form onValidSubmit={this.onValidAuth}>
-              <ValidatedInput
-                type="password"
-                name="password"
-                label="Password"
-                // You can pass params to validation rules
-                validate="required,isLength:7"
-                errorHelp={{
-                  required: 'Please specify a password',
-                  isLength: 'Password must be 7 characters'
-                }}
-              />
-              <ButtonInput
-                type="submit"
-                bsSize="large"
-                bsStyle="primary"
-                value="Login"
-              />
-            </Form>
-          </Modal.Body>
-        </Modal>
+        {this.renderHeader()}
+        {this.renderLoginModal()}
         <div className="page-container">
           <div className="view-container">
             {this.props.children}
@@ -178,7 +219,9 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch: Function) => {
   return bindActionCreators({
     loadAppAsync: appActions.loadAppAsync,
-    redirect: routerActions.push,
+    redirectToHome: appActions.redirectToHome,
+    redirectToProducts: appActions.redirectToProducts,
+    redirectToContactUs: appActions.redirectToContactUs,
     showAuth: appActions.showAuth,
     logOut: appActions.logOut,
     authenticateAsAdmin: appActions.authenticateAsAdmin

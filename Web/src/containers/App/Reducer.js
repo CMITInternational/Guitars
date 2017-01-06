@@ -10,6 +10,9 @@ const ACTION_HANDLERS = {
   [Keys.SHOW_AUTH]: (state: Object, action: Action): Object => Object.assign({}, state, {
     showAuth: action.payload
   }),
+  [Keys.SHOW_HEADER]: (state: Object, action: Action): Object => Object.assign({}, state, {
+    showHeader: action.payload
+  }),
   [Keys.SET_IS_ADMIN]: (state: Object, action: Action): Object => Object.assign({}, state, {
     isAdmin: action.payload
   }),
@@ -25,6 +28,7 @@ export const initialState = {
   apiUrl: 'api/',
   assetUrl: '',
   admin: '',
+  showHeader: false,
   showAuth: false,
   showAuthError: false,
   isAdmin: false

@@ -8,12 +8,14 @@ import AppPropTypes from '../App/PropTypes';
 import type IApp from '../App/IApp';
 import GuitarListPropTypes from '../../models/GuitarListPropTypes';
 import type IGuitarList from '../../models/IGuitarList';
+import appActions from '../App/Actions';
 
 type IProps = {
   app: IApp,
   guitars: IGuitarList,
   loadAsync: Function,
-  goToProduct: Function
+  goToProduct: Function,
+  showHeader: Function
 }
 
 class Products extends React.Component<void, IProps, void> {
@@ -21,7 +23,8 @@ class Products extends React.Component<void, IProps, void> {
     app: React.PropTypes.shape(AppPropTypes).isRequired,
     guitars: React.PropTypes.shape(GuitarListPropTypes),
     goToProduct: React.PropTypes.func.isRequired,
-    loadAsync: React.PropTypes.func.isRequired
+    loadAsync: React.PropTypes.func.isRequired,
+    showHeader: React.PropTypes.func.isRequired
   };
 
   constructor (props: IProps) {
@@ -36,6 +39,10 @@ class Products extends React.Component<void, IProps, void> {
       this.props.goToProduct(guitar.Id);
     };
   };
+
+  componentWillMount () {
+    this.props.showHeader(true);
+  }
 
   componentDidMount () {
     this.props.loadAsync();
@@ -79,7 +86,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch: Function) => {
   return bindActionCreators({
     goToProduct: (id) => routerActions.push(`/product/${id}`),
-    loadAsync: productsActions.loadProductsAsync
+    loadAsync: productsActions.loadProductsAsync,
+    showHeader: appActions.showHeader
   }, dispatch);
 };
 
