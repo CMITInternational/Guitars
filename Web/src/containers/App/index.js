@@ -197,11 +197,11 @@ export class App extends React.Component {
   render () {
     return (this.props.app.isReady)
     ? (
-      <div>
+      <div style={{height: '100%'}}>
         {this.renderHeader()}
         {this.renderLoginModal()}
-        <div className="page-container">
-          <div className="view-container">
+        <div className="page-container" style={{height: '100%'}}>
+          <div className="view-container" style={{height: '100%'}}>
             {this.props.children}
           </div>
         </div>
