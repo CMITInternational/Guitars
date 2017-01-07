@@ -52,7 +52,7 @@ class Products extends React.Component<void, IProps, void> {
     let thumbUrl = `${this.props.app.assetUrl}${guitar.Path}/${guitar.Thumb}`;
 
     return (
-      <Col xs={12} sm={6} md={4} lg={3} key={guitar.Id}>
+      <Col xs={12} sm={6} md={6} lg={6} key={guitar.Id}>
         <Thumbnail src={thumbUrl}>
           <h3>{guitar.Title}</h3>
           <p>{guitar.Description}</p>
