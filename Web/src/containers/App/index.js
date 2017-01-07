@@ -8,6 +8,7 @@ import AppPropTypes from './PropTypes';
 import type IApp from './IApp';
 import Menu from 'react-burger-menu/lib/menus/stack';
 import { Form, ValidatedInput } from 'react-bootstrap-validation';
+import DocumentTitle from 'react-document-title';
 
 type IProps = {
   app: IApp,
@@ -161,14 +162,15 @@ export class App extends React.Component {
     );
   }
 
-  renderHeader () {
+  renderHeader (docTitle : string) {
     let logOutButton = (this.props.app.isAdmin === true)
       ? (<div onClick={this.logOut} className="menu-item">LogOut</div>)
       : (<div />);
     let logInButton = (this.props.app.isAdmin === false)
       ? (<Button bsSize="small" onClick={this.logIn}><Glyphicon glyph="wrench" /></Button>)
       : `${(this.props.app.isAdmin) ? '(Admin)' : ''}`;
-    let brand = (<div>Phillip J Buttrose Pty Ltd / Australian Handcrafted Guitars {logInButton}</div>);
+    let title = docTitle;
+    let brand = (<div>{title} {logInButton}</div>);
 
     if (this.props.app.showHeader) {
       return (
@@ -184,7 +186,6 @@ export class App extends React.Component {
               <Navbar.Brand>
                 {brand}
               </Navbar.Brand>
-              <Navbar.Toggle />
             </Navbar.Header>
           </Navbar>
         </div>
@@ -195,18 +196,22 @@ export class App extends React.Component {
   }
 
   render () {
+    let docTitle = 'Phillip J Buttrose Pty Ltd';
+
     return (this.props.app.isReady)
     ? (
-      <div style={{height: '100%'}}>
-        {this.renderHeader()}
-        {this.renderLoginModal()}
-        <div className="page-container" style={{height: '100%'}}>
-          <div className="view-container" style={{height: '100%'}}>
-            {this.props.children}
+      <DocumentTitle title={docTitle}>
+        <div style={{height: '100%'}}>
+          {this.renderHeader(docTitle)}
+          {this.renderLoginModal()}
+          <div className="page-container" style={{height: '100%'}}>
+            <div className="view-container" style={{height: '100%'}}>
+              {this.props.children}
+            </div>
           </div>
+          <Alert stack={{limit: 5}} timeout={5000} position="bottom" spacing={50} offset={50} effect="slide" html />
         </div>
-        <Alert stack={{limit: 5}} timeout={5000} position="bottom" spacing={50} offset={50} effect="slide" html />
-      </div>
+      </DocumentTitle>
     )
     : null;
   }

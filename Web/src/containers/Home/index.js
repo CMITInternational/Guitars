@@ -85,9 +85,8 @@ class Home extends React.Component<void, IProps, void> {
     this.props.showHeader(false);
     this.swapContent();
     if (this.state.processId === undefined) {
-      let setBackImageProcId = setInterval(this.swapContent, 3000);
       this.setState({
-        processId: setBackImageProcId
+        processId: setInterval(this.swapContent, 6000)
       });
     }
   }
@@ -97,7 +96,7 @@ class Home extends React.Component<void, IProps, void> {
 
   componentWillUnmount () {
     if (this.state.processId !== undefined) {
-      clearInterval(this.state.backImage.processId);
+      clearInterval(this.state.processId);
       this.setState({
         processId: undefined
       });
