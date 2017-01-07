@@ -414,12 +414,12 @@
       <workItem from="1483696489874" duration="3571000" />
       <workItem from="1483747665863" duration="38000" />
       <workItem from="1483750338397" duration="1636000" />
-      <workItem from="1483754428290" duration="2194000" />
+      <workItem from="1483754428290" duration="2329000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="115052000" />
+    <option name="totallyTimeSpent" value="115187000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
@@ -432,7 +432,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32932073" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.11485775" sideWeight="0.5410886" order="6" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="true" internal_type="SLIDING" type="FLOATING" visible="true" show_stripe_button="true" weight="0.24759872" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="1937" y="25" width="1772" height="964" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="true" internal_type="SLIDING" type="FLOATING" visible="false" show_stripe_button="true" weight="0.24759872" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="1937" y="25" width="1772" height="964" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24976481" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="true" content_ui="tabs" />
