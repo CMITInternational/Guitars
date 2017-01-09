@@ -28,12 +28,36 @@ class Product extends React.Component <void, IProps, void> {
     loadAsync: React.PropTypes.func.isRequired
   };
 
+  constructor (props: IProps) {
+    super(props);
+
+    this.renderImages = this.renderImages.bind(this);
+  }
+
   componentWillMount () {
     this.props.showHeader(true);
   }
 
   componentDidMount () {
     this.props.loadAsync(this.props.id);
+  }
+
+  renderImages () {
+    if (this.props.data.Images !== undefined && this.props.data.Images.length > 0) {
+      return (
+        <Row>
+          {this.props.data.Images.map(image => {
+            return (
+              <Col key={image} lg={6} md={6} sm={6} xs={6}>
+                <Thumbnail src={`${this.props.app.assetUrl}${this.props.data.Path}/${image}`} />
+              </Col>
+            );
+          })}
+        </Row>
+      );
+    } else {
+      return null;
+    }
   }
 
   render () {
@@ -53,24 +77,7 @@ class Product extends React.Component <void, IProps, void> {
             <Row>
               <Col lg={12} md={12} sm={12} xs={12}>{this.props.data.Description}</Col>
             </Row>
-            {(this.props.data.Images !== undefined && this.props.data.Images.length > 0)
-              ? (
-                <Row>
-                  <Col lg={6} md={6} sm={6} xs={6}>
-                    <Thumbnail src={`${this.props.app.assetUrl}${this.props.data.Path}/${this.props.data.Images[0]}`} />
-                  </Col>
-                  {(this.props.data.Images.length > 1)
-                    ? (
-                      <Col lg={6} md={6} sm={6} xs={6}>
-                        <Thumbnail src={`${this.props.app.assetUrl}${this.props.data.Path}/${this.props.data.Images[1]}`} />
-                      </Col>
-                    )
-                    : null
-                  }
-                </Row>
-              )
-              : null
-            }
+            {this.renderImages()}
           </Grid>
         </div>
       );
