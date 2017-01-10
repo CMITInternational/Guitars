@@ -45,9 +45,7 @@ export class App extends React.Component {
     this.hideAuthModal = this.hideAuthModal.bind(this);
     this.logIn = this.logIn.bind(this);
     this.logOut = this.logOut.bind(this);
-    this.generateRedirectToHome = this.generateRedirectToHome.bind(this);
-    this.generateRedirectToProducts = this.generateRedirectToProducts.bind(this);
-    this.generateRedirectToContactUs = this.generateRedirectToContactUs.bind(this);
+    this.generateRedirect = this.generateRedirect.bind(this);
     this.onMenuStateChange = this.onMenuStateChange.bind(this);
     this.onValidAuth = this.onValidAuth.bind(this);
     this.renderLoginModal = this.renderLoginModal.bind(this);
@@ -70,27 +68,11 @@ export class App extends React.Component {
     });
   }
 
-  generateRedirectToHome () {
+  generateRedirect (fn: Function) {
     return () => {
       this.setState({
         expanded: false
-      }, () => { this.props.redirectToHome(); });
-    };
-  }
-
-  generateRedirectToProducts () {
-    return () => {
-      this.setState({
-        expanded: false
-      }, () => { this.props.redirectToProducts(); });
-    };
-  }
-
-  generateRedirectToContactUs () {
-    return () => {
-      this.setState({
-        expanded: false
-      }, () => { this.props.redirectToContactUs(); });
+      }, () => { fn(); });
     };
   }
 
@@ -176,9 +158,9 @@ export class App extends React.Component {
       return (
         <div>
           <Menu right isOpen={this.state.expanded} onStateChange={this.onMenuStateChange}>
-            <div onClick={this.generateRedirectToHome()} className="menu-item">Home</div>
-            <div onClick={this.generateRedirectToProducts()} className="menu-item">Products</div>
-            <div onClick={this.generateRedirectToContactUs()} className="menu-item">Contact Us</div>
+            <div onClick={this.generateRedirect(this.props.redirectToHome)} className="menu-item">Home</div>
+            <div onClick={this.generateRedirect(this.props.redirectToProducts)} className="menu-item">Products</div>
+            <div onClick={this.generateRedirect(this.props.redirectToContactUs)} className="menu-item">Contact Us</div>
             {logOutButton}
           </Menu>
           <Navbar fixedTop>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { button } from 'react-bootstrap';
+import { button, Jumbotron } from 'react-bootstrap';
 import appActions from '../App/Actions';
 import type IApp from '../App/IApp';
 import appPropTypes from '../App/PropTypes';
@@ -120,8 +120,21 @@ class Home extends React.Component<void, IProps, void> {
 
     return (
       <div style={divStyle}>
-        <h1>{this.state.frontText.collection[this.state.frontText.index]}</h1>
-        <button style={{background: 'none', border: 'none'}} onClick={this.props.redirectToProducts}>Click Here To Enter</button>
+        <Jumbotron>
+          <div className="container">
+            <div className="message-box">
+              <div className="first-line">
+                <p>Australian Handcrafted Guitars</p>
+              </div>
+              <div className="first-line">
+                <p>{this.state.frontText.collection[this.state.frontText.index]}</p>
+              </div>
+              <div className="first-line">
+                <button style={{background: 'none', border: 'none'}} onClick={this.props.redirectToProducts}>Click Here To Enter</button>
+              </div>
+            </div>
+          </div>
+        </Jumbotron>
       </div>
     );
   }
