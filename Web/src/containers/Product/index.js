@@ -64,12 +64,20 @@ class Product extends React.Component <void, IProps, void> {
     return (this.props.ready === false)
       ? (
         <div>
-          <PageHeader>Loading {this.props.id}</PageHeader>
+          <PageHeader>
+            <div className="section-header">
+              <h1 className="section-title">Loading {this.props.id}</h1>
+            </div>
+          </PageHeader>
         </div>
       )
       : (
         <div>
-          <PageHeader>{this.props.data.Title}</PageHeader>
+          <PageHeader>
+            <div className="section-header">
+              <h1 className="section-title">{this.props.data.Title}</h1>
+            </div>
+          </PageHeader>
           <Grid fluid>
             <Row>
               <Col lg={12} md={12} sm={12} xs={12}>{this.props.data.SubTitle}</Col>

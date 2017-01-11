@@ -60,7 +60,11 @@ class ContactUs extends React.Component<void, IProps, void> {
   render () {
     return (
       <div>
-        <PageHeader>Contact Us</PageHeader>
+        <PageHeader>
+          <div className="section-header">
+            <h1 className="section-title">Contact Us</h1>
+          </div>
+        </PageHeader>
         <Grid fluid>
           <Row>
             <Col lg={12} md={12} sm={12} xs={12}>

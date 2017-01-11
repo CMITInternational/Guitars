@@ -67,7 +67,11 @@ class Products extends React.Component<void, IProps, void> {
   render () {
     return (
       <div>
-        <PageHeader>Products</PageHeader>
+        <PageHeader>
+          <div className="section-header">
+            <h1 className="section-title">Products</h1>
+          </div>
+        </PageHeader>
         <Grid fluid>
           <Row>
             {this.props.guitars.data.map(this.renderGuitar)}
