@@ -104,37 +104,50 @@ class Home extends React.Component<void, IProps, void> {
   }
 
   render () {
-    let divStyle = {
-      height: '100%',
-      backgroundImage: `url(${this.props.app.assetUrl}${this.state.backImage.collection[this.state.backImage.index]})`,
-      backgroundSize: 'cover',
-      backgroundRepeat: 'no-repeat',
-      alignContent: 'center',
-      alignItems: 'center',
-      boxSizing: 'border-box',
-      display: 'flex',
-      flexDirection: 'column',
-      flexWrap: 'wrap',
-      justifyContent: 'center'
+    // let divStyle = {
+    //   height: '100%',
+    //   alignContent: 'center',
+    //   alignItems: 'center',
+    //   boxSizing: 'border-box',
+    //   display: 'flex',
+    //   flexDirection: 'column',
+    //   flexWrap: 'wrap',
+    //   justifyContent: 'center',
+    //   backgroundImage: `url(${this.props.app.assetUrl}assets/jumbotron-back.stretched2.png)`,
+    //   backgroundSize: '100% 100%',
+    //   backgroundRepeat: 'no-repeat',
+    //   opacity: 1
+    // };
+
+    let swapBackStyle = {
+      backgroundImage: `url(${this.props.app.assetUrl}${this.state.backImage.collection[this.state.backImage.index]})`
+      // ,
+      // height: '100%',
+      // backgroundSize: 'cover',
+      // backgroundRepeat: 'no-repeat',
+      // opacity: 1,
+      // zIndex: -1
     };
 
     return (
-      <div style={divStyle}>
-        <Jumbotron>
-          <div className="container">
-            <div className="message-box">
-              <div className="first-line">
-                <p>Australian Handcrafted Guitars</p>
-              </div>
-              <div className="first-line">
-                <p>{this.state.frontText.collection[this.state.frontText.index]}</p>
-              </div>
-              <div className="first-line">
-                <button style={{background: 'none', border: 'none'}} onClick={this.props.redirectToProducts}>Click Here To Enter</button>
+      <div className="home-backdrop" style={swapBackStyle}>
+        <div className="home-frontdrop">
+          <Jumbotron>
+            <div className="container">
+              <div className="message-box">
+                <div className="first-line">
+                  <p>Australian Handcrafted Guitars</p>
+                </div>
+                <div className="first-line">
+                  <p>{this.state.frontText.collection[this.state.frontText.index]}</p>
+                </div>
+                <div className="first-line">
+                  <button style={{background: 'none', border: 'none'}} onClick={this.props.redirectToProducts}>Click Here To Enter</button>
+                </div>
               </div>
             </div>
-          </div>
-        </Jumbotron>
+          </Jumbotron>
+        </div>
       </div>
     );
   }

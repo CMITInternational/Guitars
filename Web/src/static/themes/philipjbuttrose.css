@@ -445,6 +445,29 @@ a.btn-theme:focus{
 -----Header Styles------
 ------------------------*/
 
+.home-backdrop {
+    height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    opacity: 0.5;
+    z-index: -1
+}
+
+.home-frontdrop {
+    height: 100%;
+    align-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    background-image: url(jumbotron-back.stretched2.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    opacity: 1
+}
+
 .jumbotron {
     background:transparent;
     color:#777;
