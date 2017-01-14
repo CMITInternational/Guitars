@@ -98,7 +98,7 @@ namespace Web.Controllers
             return GetPortfolio(portfolio.Id);
         }
 
-        [Route("api/portfolio/remove/{id}")]
+        [Route("api/portfolio/{id}/remove")]
         [HttpPost]
         public bool Remove(string id)
         {

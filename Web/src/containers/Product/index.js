@@ -1,21 +1,26 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { PageHeader, Grid, Col, Row, Thumbnail } from 'react-bootstrap';
+import { PageHeader, Grid, Col, Row, Thumbnail, ButtonGroup, Button } from 'react-bootstrap';
 import appActions from '../App/Actions';
 import productActions from './Actions';
 import type IGuitar from '../../models/IGuitar';
 import GuitarPropTypes from '../../models/GuitarPropTypes';
 import type IApp from '../App/IApp';
 import AppPropTypes from '../App/PropTypes';
+import { Form, ValidatedInput } from 'react-bootstrap-validation';
 
 type IProps = {
   id: string,
   data: IGuitar,
   app: IApp,
   ready: boolean,
+  isEdit: boolean,
   showHeader: Function,
-  loadAsync: Function
+  loadAsync: Function,
+  saveAsync: Function,
+  editOn: Function,
+  editOff: Function
 }
 
 class Product extends React.Component <void, IProps, void> {
@@ -24,14 +29,21 @@ class Product extends React.Component <void, IProps, void> {
     data: React.PropTypes.shape(GuitarPropTypes).isRequired,
     app: React.PropTypes.shape(AppPropTypes).isRequired,
     ready: React.PropTypes.bool.isRequired,
+    isEdit: React.PropTypes.bool.isRequired,
     showHeader: React.PropTypes.func.isRequired,
-    loadAsync: React.PropTypes.func.isRequired
+    loadAsync: React.PropTypes.func.isRequired,
+    saveAsync: React.PropTypes.func.isRequired,
+    editOn: React.PropTypes.func.isRequired,
+    editOff: React.PropTypes.func.isRequired
   };
 
   constructor (props: IProps) {
     super(props);
 
+    this.renderProduct = this.renderProduct.bind(this);
     this.renderImages = this.renderImages.bind(this);
+    this.renderAdminButtons = this.renderAdminButtons.bind(this);
+    this.onSave = this.onSave.bind(this);
   }
 
   componentWillMount () {
@@ -40,6 +52,11 @@ class Product extends React.Component <void, IProps, void> {
 
   componentDidMount () {
     this.props.loadAsync(this.props.id);
+  }
+
+  onSave (value) {
+    let guitar = this.props.data;
+    this.props.saveAsync(guitar);
   }
 
   renderImages () {
@@ -60,6 +77,71 @@ class Product extends React.Component <void, IProps, void> {
     }
   }
 
+  renderAdminButtons () {
+    return (this.props.app.isAdmin)
+      ? (this.props.isEdit)
+        ? (
+          <ButtonGroup>
+            <Button type="submit" bsStyle="primary">Save</Button>
+            <Button onClick={this.props.editOff} bsStyle="danger">Cancel</Button>
+          </ButtonGroup>
+        )
+        : (
+          <Button onClick={this.props.editOn} bsStyle="primary">Edit</Button>
+        )
+      : null;
+  }
+
+  renderProduct () {
+    return (
+      <div>
+        <PageHeader>
+          {this.renderAdminButtons()}
+          <div className="section-header">
+            <h1 className="section-title">
+              {
+                (this.props.isEdit)
+                  ? (
+                    <ValidatedInput
+                      type="text"
+                      name="Title"
+                      value={this.props.data.Title}
+                    />
+                  )
+                  : this.props.data.Title
+              }
+            </h1>
+          </div>
+        </PageHeader>
+        <Grid fluid>
+          <Row>
+            <Col lg={12} md={12} sm={12} xs={12}>
+              {
+                (this.props.isEdit)
+                ? (
+                  <ValidatedInput
+                    type="text"
+                    name="SubTitle"
+                    label="Sub Title"
+                    value={this.props.data.SubTitle}
+                  />
+                )
+                : this.props.data.SubTitle
+              }
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={12} md={12} sm={12} xs={12}>
+              {this.props.data.Description}
+            </Col>
+          </Row>
+          {this.renderImages()}
+        </Grid>
+        {this.renderAdminButtons()}
+      </div>
+    );
+  }
+
   render () {
     return (this.props.ready === false)
       ? (
@@ -71,24 +153,13 @@ class Product extends React.Component <void, IProps, void> {
           </PageHeader>
         </div>
       )
-      : (
-        <div>
-          <PageHeader>
-            <div className="section-header">
-              <h1 className="section-title">{this.props.data.Title}</h1>
-            </div>
-          </PageHeader>
-          <Grid fluid>
-            <Row>
-              <Col lg={12} md={12} sm={12} xs={12}>{this.props.data.SubTitle}</Col>
-            </Row>
-            <Row>
-              <Col lg={12} md={12} sm={12} xs={12}>{this.props.data.Description}</Col>
-            </Row>
-            {this.renderImages()}
-          </Grid>
-        </div>
-      );
+      : (this.props.isEdit)
+      ? (
+        <Form onValidSubmit={this.onSave}>
+          {this.renderProduct()}
+        </Form>
+      )
+      : this.renderProduct();
   }
 }
 
@@ -96,13 +167,17 @@ const mapStateToProps = (state, ownProps) => ({
   id: ownProps.params.id,
   app: state.app,
   data: state.product.data,
-  ready: state.product.isReady
+  ready: state.product.isReady,
+  isEdit: state.product.isEditing
 });
 
 const mapDispatchToProps = (dispatch: Function) => {
   return bindActionCreators({
     showHeader: appActions.showHeader,
-    loadAsync: productActions.loadProductAsync
+    loadAsync: productActions.loadProductAsync,
+    saveAsync: productActions.saveProductAsync,
+    editOn: productActions.editProductOn,
+    editOff: productActions.editProductOff
   }, dispatch);
 };
 
