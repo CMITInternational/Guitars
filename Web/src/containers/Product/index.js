@@ -105,36 +105,44 @@ class Product extends React.Component <void, IProps, void> {
                     <ValidatedInput
                       type="text"
                       name="Title"
+                      validate="required"
                       value={this.props.data.Title}
                     />
                   )
                   : this.props.data.Title
               }
             </h1>
+            <p className="section-description lead">
+              {
+                (this.props.isEdit)
+                  ? (
+                    <ValidatedInput
+                      type="text"
+                      name="SubTitle"
+                      validate="required"
+                      value={this.props.data.SubTitle}
+                    />
+                  )
+                  : this.props.data.SubTitle
+              }
+            </p>
+            <p className="section-description">
+              {
+                (this.props.isEdit)
+                  ? (
+                    <ValidatedInput
+                      type="textarea"
+                      name="Description"
+                      validation="required"
+                      value={this.props.data.Description}
+                    />
+                  )
+                  : this.props.data.Description
+              }
+            </p>
           </div>
         </PageHeader>
         <Grid fluid>
-          <Row>
-            <Col lg={12} md={12} sm={12} xs={12}>
-              {
-                (this.props.isEdit)
-                ? (
-                  <ValidatedInput
-                    type="text"
-                    name="SubTitle"
-                    label="Sub Title"
-                    value={this.props.data.SubTitle}
-                  />
-                )
-                : this.props.data.SubTitle
-              }
-            </Col>
-          </Row>
-          <Row>
-            <Col lg={12} md={12} sm={12} xs={12}>
-              {this.props.data.Description}
-            </Col>
-          </Row>
           {this.renderImages()}
         </Grid>
         {this.renderAdminButtons()}
