@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import createBrowserHistory from 'history/lib/createBrowserHistory';
-import useRouterHistory from 'react-router/lib/useRouterHistory';
-import syncHistoryWithStore from 'react-router-redux/lib/sync';
+import { createHistory } from 'history';
+import { useRouterHistory } from 'react-router';
+import { syncHistoryWithStore } from 'react-router-redux';
 import makeRoutes from './routes';
 import Root from './containers/Root';
 import configureStore from './containers/configureStore';
 
 // Configure history for react-router
-const browserHistory = useRouterHistory(createBrowserHistory)({
+const browserHistory = useRouterHistory(createHistory)({
   basename: __BASENAME__
 });
 

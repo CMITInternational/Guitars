@@ -1,14 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { PageHeader, Grid, Col, Row, Thumbnail, ButtonGroup, Button } from 'react-bootstrap';
+import { PageHeader, Grid, Col, Row, Thumbnail, ButtonGroup, Button, Form, FormControl } from 'react-bootstrap';
 import appActions from '../App/Actions';
 import productActions from './Actions';
 import type IGuitar from '../../models/IGuitar';
 import GuitarPropTypes from '../../models/GuitarPropTypes';
 import type IApp from '../App/IApp';
 import AppPropTypes from '../App/PropTypes';
-import { Form, ValidatedInput } from 'react-bootstrap-validation';
 
 type IProps = {
   id: string,
@@ -40,6 +39,13 @@ class Product extends React.Component <void, IProps, void> {
   constructor (props: IProps) {
     super(props);
 
+    this.state = {
+      Id: '',
+      Title: '',
+      SubTitle: '',
+      Description: ''
+    };
+
     this.renderProduct = this.renderProduct.bind(this);
     this.renderImages = this.renderImages.bind(this);
     this.renderAdminButtons = this.renderAdminButtons.bind(this);
@@ -54,7 +60,16 @@ class Product extends React.Component <void, IProps, void> {
     this.props.loadAsync(this.props.id);
   }
 
-  onSave (value) {
+  componentWillReceiveProps (nextProps: IProps) {
+    this.setState({
+      Id: nextProps.data.Id,
+      Title: nextProps.data.Title,
+      SubTitle: nextProps.data.SubTitle,
+      Description: nextProps.data.Description
+    });
+  }
+
+  onSave () {
     let guitar = this.props.data;
     this.props.saveAsync(guitar);
   }
@@ -82,7 +97,7 @@ class Product extends React.Component <void, IProps, void> {
       ? (this.props.isEdit)
         ? (
           <ButtonGroup>
-            <Button type="submit" bsStyle="primary">Save</Button>
+            <Button onClick={this.onSave} bsStyle="primary">Save</Button>
             <Button onClick={this.props.editOff} bsStyle="danger">Cancel</Button>
           </ButtonGroup>
         )
@@ -90,6 +105,24 @@ class Product extends React.Component <void, IProps, void> {
           <Button onClick={this.props.editOn} bsStyle="primary">Edit</Button>
         )
       : null;
+  }
+
+  updateTitle (evt) {
+    this.setState({
+      Title: evt.target.value
+    });
+  }
+
+  updateSubTitle (evt) {
+    this.setState({
+      SubTitle: evt.target.value
+    });
+  }
+
+  updateDescription (evt) {
+    this.setState({
+      Description: evt.target.value
+    });
   }
 
   renderProduct () {
@@ -102,10 +135,9 @@ class Product extends React.Component <void, IProps, void> {
               {
                 (this.props.isEdit)
                   ? (
-                    <ValidatedInput
+                    <FormControl
                       type="text"
-                      name="Title"
-                      validate="required"
+                      onChange={this.updateTitle}
                       value={this.props.data.Title}
                     />
                   )
@@ -116,10 +148,9 @@ class Product extends React.Component <void, IProps, void> {
               {
                 (this.props.isEdit)
                   ? (
-                    <ValidatedInput
+                    <FormControl
                       type="text"
-                      name="SubTitle"
-                      validate="required"
+                      onChange={this.updateSubTitle}
                       value={this.props.data.SubTitle}
                     />
                   )
@@ -130,10 +161,9 @@ class Product extends React.Component <void, IProps, void> {
               {
                 (this.props.isEdit)
                   ? (
-                    <ValidatedInput
-                      type="textarea"
-                      name="Description"
-                      validation="required"
+                    <FormControl
+                      type="text"
+                      onChange={this.updateDescription}
                       value={this.props.data.Description}
                     />
                   )

@@ -3,11 +3,10 @@ import connect from 'react-redux/lib/components/connect';
 import { bindActionCreators } from 'redux';
 import appActions from './Actions';
 import Alert from 'react-s-alert';
-import { Navbar, Modal, ButtonInput, Glyphicon, Button } from 'react-bootstrap';
+import { Navbar, Modal, Glyphicon, Button, Form, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 import AppPropTypes from './PropTypes';
 import type IApp from './IApp';
 import Menu from 'react-burger-menu/lib/menus/stack';
-import { Form, ValidatedInput } from 'react-bootstrap-validation';
 import DocumentTitle from 'react-document-title';
 
 type IProps = {
@@ -39,7 +38,8 @@ export class App extends React.Component {
     super(props);
 
     this.state = {
-      expanded: false
+      expanded: false,
+      authPwd: ''
     };
 
     this.hideAuthModal = this.hideAuthModal.bind(this);
@@ -50,10 +50,17 @@ export class App extends React.Component {
     this.onValidAuth = this.onValidAuth.bind(this);
     this.renderLoginModal = this.renderLoginModal.bind(this);
     this.renderHeader = this.renderHeader.bind(this);
+    this.updatePwd = this.updatePwd.bind(this);
   }
 
-  onValidAuth (values) {
-    this.props.authenticateAsAdmin(values.password)
+  updatePwd (evt) {
+    this.setState({
+      authPwd: evt.target.value
+    });
+  }
+
+  onValidAuth () {
+    this.props.authenticateAsAdmin(this.state.authPwd)
       .then(() => {
         this.hideAuthModal();
       })
@@ -120,24 +127,12 @@ export class App extends React.Component {
       <Modal show={this.props.app.showAuth} bsSize="lg" onHide={this.hideAuthModal}>
         <Modal.Title>Admin Authentication</Modal.Title>
         <Modal.Body>
-          <Form onValidSubmit={this.onValidAuth}>
-            <ValidatedInput
-              type="password"
-              name="password"
-              label="Password"
-              // You can pass params to validation rules
-              validate="required,isLength:7"
-              errorHelp={{
-                required: 'Please specify a password',
-                isLength: 'Password must be 7 characters'
-              }}
-            />
-            <ButtonInput
-              type="submit"
-              bsSize="large"
-              bsStyle="primary"
-              value="Login"
-            />
+          <Form inline>
+            <FormGroup controlId="password">
+              <ControlLabel>Password</ControlLabel>
+              <FormControl type="password" onChange={this.updatePwd} value={this.state.authPwd} />
+            </FormGroup>
+            <Button onClick={this.onValidAuth}>Submit</Button>
           </Form>
         </Modal.Body>
       </Modal>
