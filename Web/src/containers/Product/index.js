@@ -149,7 +149,7 @@ class Product extends React.Component <void, IProps, void> {
                 (this.props.isEdit)
                   ? (
                     <FormControl
-                      type="text"
+                      componentClass="textarea"
                       onChange={this.updateSubTitle}
                       value={this.props.data.SubTitle}
                     />
@@ -162,7 +162,8 @@ class Product extends React.Component <void, IProps, void> {
                 (this.props.isEdit)
                   ? (
                     <FormControl
-                      type="text"
+                      style={{height: '100px'}}
+                      componentClass="textarea"
                       onChange={this.updateDescription}
                       value={this.props.data.Description}
                     />
