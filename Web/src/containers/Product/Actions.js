@@ -60,10 +60,15 @@ const saveProductAsync = (guitar: IGuitar): Function => {
         let fullUrl = `${apiUrl}portfolio/`;
         let params = JSON.stringify(guitar);
         omniPost(fullUrl, params, 'json')
-          .then(() => {
-            dispatch(loadProductAsync(guitar.Id))
-              .then(resolve)
-              .catch(reject);
+          .then((response) => {
+            let data = response.body;
+            if (data !== undefined && typeof data === 'object') {
+              dispatch(loadProductAsync(data.Id))
+                .then(() => resolve(data.Id))
+                .catch(reject);
+            } else {
+              resolve();
+            }
           })
           .catch(reject);
       } else {

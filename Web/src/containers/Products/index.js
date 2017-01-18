@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { PageHeader, Grid, Col, Row, Thumbnail, Button } from 'react-bootstrap';
 import { routerActions } from 'react-router-redux';
 import productsActions from './Actions';
+import productActions from '../Product/Actions';
 import AppPropTypes from '../App/PropTypes';
 import type IApp from '../App/IApp';
 import GuitarListPropTypes from '../../models/GuitarListPropTypes';
@@ -14,6 +15,7 @@ type IProps = {
   app: IApp,
   guitars: IGuitarList,
   loadAsync: Function,
+  saveAsync: Function,
   goToProduct: Function,
   showHeader: Function
 }
@@ -24,6 +26,7 @@ class Products extends React.Component<void, IProps, void> {
     guitars: React.PropTypes.shape(GuitarListPropTypes),
     goToProduct: React.PropTypes.func.isRequired,
     loadAsync: React.PropTypes.func.isRequired,
+    saveAsync: React.PropTypes.func.isRequired,
     showHeader: React.PropTypes.func.isRequired
   };
 
@@ -32,6 +35,8 @@ class Products extends React.Component<void, IProps, void> {
 
     this.renderGuitar = this.renderGuitar.bind(this);
     this.generateRouteToProduct = this.generateRouteToProduct.bind(this);
+    this.renderAdminButtons = this.renderAdminButtons.bind(this);
+    this.onNewProduct = this.onNewProduct.bind(this);
   }
 
   generateRouteToProduct = (guitar) => {
@@ -64,12 +69,31 @@ class Products extends React.Component<void, IProps, void> {
     );
   };
 
+  onNewProduct () {
+    this.props.saveAsync({
+      Title: 'New',
+      SubTitle: 'New Guitar',
+      Description: 'A New Guitar'
+    }).then((Id) => {
+      this.props.goToProduct(Id);
+    });
+  }
+
+  renderAdminButtons () {
+    return (this.props.app.isAdmin)
+      ? (
+        <Button bsStyle="primary" onClick={this.onNewProduct}>New</Button>
+      )
+      : null;
+  }
+
   render () {
     return (
       <div>
         <PageHeader>
           <div className="section-header">
             <h1 className="section-title">Products</h1>
+            {this.renderAdminButtons()}
           </div>
         </PageHeader>
         <Grid fluid>
@@ -90,6 +114,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch: Function) => {
   return bindActionCreators({
     goToProduct: (id) => routerActions.push(`/product/${id}`),
+    saveAsync: productActions.saveProductAsync,
     loadAsync: productsActions.loadProductsAsync,
     showHeader: appActions.showHeader
   }, dispatch);

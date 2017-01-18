@@ -50,6 +50,9 @@ class Product extends React.Component <void, IProps, void> {
     this.renderImages = this.renderImages.bind(this);
     this.renderAdminButtons = this.renderAdminButtons.bind(this);
     this.onSave = this.onSave.bind(this);
+    this.updateTitle = this.updateTitle.bind(this);
+    this.updateSubTitle = this.updateSubTitle.bind(this);
+    this.updateDescription = this.updateDescription.bind(this);
   }
 
   componentWillMount () {
@@ -70,12 +73,12 @@ class Product extends React.Component <void, IProps, void> {
   }
 
   onSave () {
-    let guitar = this.props.data;
+    let guitar = Object.assign({}, this.props.data, this.state);
     this.props.saveAsync(guitar);
   }
 
   renderImages () {
-    if (this.props.data.Images !== undefined && this.props.data.Images.length > 0) {
+    if (this.props.data.Images !== undefined && this.props.data.Images !== null && this.props.data.Images.length > 0) {
       return (
         <Row>
           {this.props.data.Images.map(image => {
@@ -138,7 +141,7 @@ class Product extends React.Component <void, IProps, void> {
                     <FormControl
                       type="text"
                       onChange={this.updateTitle}
-                      value={this.props.data.Title}
+                      value={this.state.Title}
                     />
                   )
                   : this.props.data.Title
@@ -151,7 +154,7 @@ class Product extends React.Component <void, IProps, void> {
                     <FormControl
                       componentClass="textarea"
                       onChange={this.updateSubTitle}
-                      value={this.props.data.SubTitle}
+                      value={this.state.SubTitle}
                     />
                   )
                   : this.props.data.SubTitle
@@ -165,7 +168,7 @@ class Product extends React.Component <void, IProps, void> {
                       style={{height: '100px'}}
                       componentClass="textarea"
                       onChange={this.updateDescription}
-                      value={this.props.data.Description}
+                      value={this.state.Description}
                     />
                   )
                   : this.props.data.Description
