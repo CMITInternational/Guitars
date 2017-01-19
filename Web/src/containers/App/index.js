@@ -65,6 +65,7 @@ export class App extends React.Component {
         this.setState({
           authPwd: ''
         });
+        this.hideAuth();
       })
       .catch(() => {
         Alert.error('Authentication Failed');

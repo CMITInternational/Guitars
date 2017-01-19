@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { PageHeader, Grid, Col, Row, Thumbnail, Button } from 'react-bootstrap';
+import { PageHeader, Grid, Col, Row, Thumbnail, Button, Navbar } from 'react-bootstrap';
 import { routerActions } from 'react-router-redux';
 import productsActions from './Actions';
 import productActions from '../Product/Actions';
@@ -82,7 +82,13 @@ class Products extends React.Component<void, IProps, void> {
   renderAdminButtons () {
     return (this.props.app.isAdmin)
       ? (
-        <Button bsStyle="primary" onClick={this.onNewProduct}>New</Button>
+        <Navbar fixTop style={{paddingTop: '50px'}}>
+          <Navbar.Header>
+            <Navbar.Form pullLeft>
+              <Button bsStyle="primary" onClick={this.onNewProduct}>New</Button>
+            </Navbar.Form>
+          </Navbar.Header>
+        </Navbar>
       )
       : null;
   }
@@ -90,10 +96,10 @@ class Products extends React.Component<void, IProps, void> {
   render () {
     return (
       <div>
+        {this.renderAdminButtons()}
         <PageHeader>
           <div className="section-header">
             <h1 className="section-title">Products</h1>
-            {this.renderAdminButtons()}
           </div>
         </PageHeader>
         <Grid fluid>

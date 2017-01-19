@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { PageHeader, Grid, Col, Row, Thumbnail, ButtonGroup, Button, Form, FormControl } from 'react-bootstrap';
+import { PageHeader, Grid, Col, Row, Thumbnail, ButtonGroup, Button, Form, FormControl, Navbar } from 'react-bootstrap';
 import appActions from '../App/Actions';
 import productActions from './Actions';
 import type IGuitar from '../../models/IGuitar';
@@ -97,16 +97,26 @@ class Product extends React.Component <void, IProps, void> {
 
   renderAdminButtons () {
     return (this.props.app.isAdmin)
-      ? (this.props.isEdit)
-        ? (
-          <ButtonGroup>
-            <Button onClick={this.onSave} bsStyle="primary">Save</Button>
-            <Button onClick={this.props.editOff} bsStyle="danger">Cancel</Button>
-          </ButtonGroup>
-        )
-        : (
-          <Button onClick={this.props.editOn} bsStyle="primary">Edit</Button>
-        )
+      ? (
+        <Navbar fixTop style={{paddingTop: '50px'}}>
+          <Navbar.Header>
+            <Navbar.Form pullLeft>
+              {
+                (this.props.isEdit)
+                  ? (
+                    <ButtonGroup>
+                      <Button onClick={this.onSave} bsStyle="primary">Save</Button>
+                      <Button onClick={this.props.editOff} bsStyle="danger">Cancel</Button>
+                    </ButtonGroup>
+                  )
+                  : (
+                    <Button onClick={this.props.editOn} bsStyle="primary">Edit</Button>
+                  )
+              }
+            </Navbar.Form>
+          </Navbar.Header>
+        </Navbar>
+      )
       : null;
   }
 
@@ -131,8 +141,8 @@ class Product extends React.Component <void, IProps, void> {
   renderProduct () {
     return (
       <div>
+        {this.renderAdminButtons()}
         <PageHeader>
-          {this.renderAdminButtons()}
           <div className="section-header">
             <h1 className="section-title">
               {
@@ -179,7 +189,6 @@ class Product extends React.Component <void, IProps, void> {
         <Grid fluid>
           {this.renderImages()}
         </Grid>
-        {this.renderAdminButtons()}
       </div>
     );
   }
