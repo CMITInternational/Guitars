@@ -3,11 +3,12 @@ import connect from 'react-redux/lib/components/connect';
 import { bindActionCreators } from 'redux';
 import appActions from './Actions';
 import Alert from 'react-s-alert';
-import { Navbar, Modal, Glyphicon, Button, Form, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
+import { Navbar, Glyphicon, Button, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 import AppPropTypes from './PropTypes';
 import type IApp from './IApp';
 import Menu from 'react-burger-menu/lib/menus/stack';
 import DocumentTitle from 'react-document-title';
+import ToggleDisplay from 'react-toggle-display';
 
 type IProps = {
   app: IApp,
@@ -42,13 +43,12 @@ export class App extends React.Component {
       authPwd: ''
     };
 
-    this.hideAuthModal = this.hideAuthModal.bind(this);
+    this.hideAuth = this.hideAuth.bind(this);
     this.logIn = this.logIn.bind(this);
     this.logOut = this.logOut.bind(this);
     this.generateRedirect = this.generateRedirect.bind(this);
     this.onMenuStateChange = this.onMenuStateChange.bind(this);
     this.onValidAuth = this.onValidAuth.bind(this);
-    this.renderLoginModal = this.renderLoginModal.bind(this);
     this.renderHeader = this.renderHeader.bind(this);
     this.updatePwd = this.updatePwd.bind(this);
   }
@@ -62,7 +62,9 @@ export class App extends React.Component {
   onValidAuth () {
     this.props.authenticateAsAdmin(this.state.authPwd)
       .then(() => {
-        this.hideAuthModal();
+        this.setState({
+          authPwd: ''
+        });
       })
       .catch(() => {
         Alert.error('Authentication Failed');
@@ -83,7 +85,7 @@ export class App extends React.Component {
     };
   }
 
-  hideAuthModal () {
+  hideAuth () {
     this.props.showAuth(false);
   }
 
@@ -122,23 +124,6 @@ export class App extends React.Component {
   componentDidUpdate (prevProps, prevState) {
   }
 
-  renderLoginModal () {
-    return (
-      <Modal show={this.props.app.showAuth} bsSize="lg" onHide={this.hideAuthModal}>
-        <Modal.Title>Admin Authentication</Modal.Title>
-        <Modal.Body>
-          <Form inline>
-            <FormGroup controlId="password">
-              <ControlLabel>Password</ControlLabel>
-              <FormControl type="password" onChange={this.updatePwd} value={this.state.authPwd} />
-            </FormGroup>
-            <Button onClick={this.onValidAuth}>Submit</Button>
-          </Form>
-        </Modal.Body>
-      </Modal>
-    );
-  }
-
   renderHeader (docTitle : string) {
     let logOutButton = (this.props.app.isAdmin === true)
       ? (<div onClick={this.logOut} className="menu-item">LogOut</div>)
@@ -163,6 +148,16 @@ export class App extends React.Component {
               <Navbar.Brand>
                 {brand}
               </Navbar.Brand>
+              <ToggleDisplay show={this.props.app.showAuth}>
+                <Navbar.Form pullLeft>
+                  <FormGroup controlId="password">
+                    <ControlLabel>Password</ControlLabel>
+                    <FormControl type="password" onChange={this.updatePwd} value={this.state.authPwd} />
+                  </FormGroup>
+                  <Button bsStyle="primary" onClick={this.onValidAuth}>Submit</Button>
+                  <Button onClick={this.hideAuth}>Cancel</Button>
+                </Navbar.Form>
+              </ToggleDisplay>
             </Navbar.Header>
           </Navbar>
         </div>
@@ -180,7 +175,6 @@ export class App extends React.Component {
       <DocumentTitle title={docTitle}>
         <div style={{height: '100%'}}>
           {this.renderHeader(docTitle)}
-          {this.renderLoginModal()}
           <div className="page-container" style={{height: '100%'}}>
             <div className="view-container" style={{height: '100%'}}>
               {this.props.children}
