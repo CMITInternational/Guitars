@@ -1,13 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { PageHeader, Grid, Row, Col, FormControl, FormGroup, Form, InputGroup, Button } from 'react-bootstrap';
+import { PageHeader, Grid, Row, Col, FormControl, FormGroup, Form, InputGroup, Button, Image } from 'react-bootstrap';
 import appActions from '../App/Actions';
+import type IApp from '../App/IApp';
+import AppPropTypes from '../App/PropTypes';
 import contactUsActions from './Actions';
 import type IContactUs from './IContactUs';
 import ContactUsPropTypes from './PropTypes';
+import FontAwesome from 'react-fontawesome';
+import 'font-awesome-webpack';
 
 type IProps = {
+  app: IApp,
   ready: boolean,
   data: IContactUs,
   showHeader: Function,
@@ -16,6 +21,7 @@ type IProps = {
 
 class ContactUs extends React.Component<void, IProps, void> {
   static propTypes = {
+    app: React.PropTypes.shape(AppPropTypes).isRequired,
     ready: React.PropTypes.bool.isRequired,
     data: React.PropTypes.shape(ContactUsPropTypes).isRequired,
     showHeader: React.PropTypes.func.isRequired,
@@ -98,13 +104,13 @@ class ContactUs extends React.Component<void, IProps, void> {
               <Form>
                 <FormGroup>
                   <InputGroup>
-                    <InputGroup.Addon>Name</InputGroup.Addon>
+                    <InputGroup.Addon><FontAwesome name="user" /></InputGroup.Addon>
                     <FormControl type="text" onChange={this.updateName} value={this.state.name} />
                   </InputGroup>
                 </FormGroup>
                 <FormGroup>
                   <InputGroup>
-                    <InputGroup.Addon>@</InputGroup.Addon>
+                    <InputGroup.Addon><FontAwesome name="envelope" /></InputGroup.Addon>
                     <FormControl type="text" onChange={this.updateEmail} value={this.state.email} />
                   </InputGroup>
                 </FormGroup>
@@ -116,19 +122,28 @@ class ContactUs extends React.Component<void, IProps, void> {
                     value={this.state.Message}
                   />
                 </FormGroup>
-                <Button bsStyle="primary">Submit</Button>
+                <Button bsStyle="primary"><FontAwesome name="location-arrow" />Send Message</Button>
               </Form>
             </Col>
-            <Col lg={6} md={6} sm={6} xs={6}>
+            <Col lg={5} lgOffset={1} md={5} mdOffset={1} sm={6} smOffset={1} xs={6} xsOffset={1}>
+              {this.renderAddress()}
               <Row>
-              <h2>{this.props.data.Header1}</h2>
-              <h3>{this.props.data.Header2}</h3>
-              {this.props.data.Phone}
-              {this.props.data.Email}
+                <Col lg={12} md={12} sm={12} xs={12}>
+                  <FontAwesome name="phone" />&nbsp;{this.props.data.Phone}
+                </Col>
               </Row>
+              <Row>
+                <Col lg={12} md={12} sm={12} xs={12}>
+                  <FontAwesome name="envelope" />&nbsp;{this.props.data.Email}
+                </Col>
+              </Row>
+              {this.renderBusinessHours()}
+              <div className="map">
+                <Image responsive src={`${this.props.app.assetUrl}assets/contact/${this.props.data.Map}`} />
+                <a className="spot" style={{top: this.props.data.Spot.Top}} href={`${this.props.data.GoogleMap}`} target="_blank"><span /></a>
+              </div>
             </Col>
           </Row>
-          {this.renderBusinessHours()}
         </Grid>
       </div>
     );
@@ -136,6 +151,7 @@ class ContactUs extends React.Component<void, IProps, void> {
 }
 
 const mapStateToProps = (state) => ({
+  app: state.app,
   data: state.contactus.data,
   ready: state.contactus.isReady
 });
