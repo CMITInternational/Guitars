@@ -65,7 +65,7 @@ namespace Web.Controllers
         // POST api/<controller>
         [Route("api/contact/email")]
         [HttpPost]
-        public void Post([FromBody] Contact value)
+        public Boolean Post([FromBody] Contact value)
         {
             var settings = ConfigurationManager.AppSettings;
             var message = new System.Net.Mail.MailMessage();
@@ -81,6 +81,7 @@ namespace Web.Controllers
                 EnableSsl = bool.Parse(settings["Smtp.EnableSSL"])
             };
             smtp.Send(message);
+            return true;
         }
     }
 }

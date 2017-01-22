@@ -13,19 +13,25 @@ import 'font-awesome-webpack';
 
 type IProps = {
   app: IApp,
+  sending: string,
   ready: boolean,
   data: IContactUs,
   showHeader: Function,
-  loadAsync: Function
+  loadAsync: Function,
+  sendAsync: Function,
+  setSending: Function
 }
 
 class ContactUs extends React.Component<void, IProps, void> {
   static propTypes = {
     app: React.PropTypes.shape(AppPropTypes).isRequired,
+    sending: React.PropTypes.string.isRequired,
     ready: React.PropTypes.bool.isRequired,
     data: React.PropTypes.shape(ContactUsPropTypes).isRequired,
     showHeader: React.PropTypes.func.isRequired,
-    loadAsync: React.PropTypes.func.isRequired
+    loadAsync: React.PropTypes.func.isRequired,
+    sendAsync: React.PropTypes.func.isRequired,
+    setSending: React.PropTypes.func.isRequired
   };
 
   constructor (props: IProps) {
@@ -42,6 +48,9 @@ class ContactUs extends React.Component<void, IProps, void> {
     this.updateName = this.updateName.bind(this);
     this.updateEmail = this.updateEmail.bind(this);
     this.updateMessage = this.updateMessage.bind(this);
+    this.renderSendingButtonText = this.renderSendingButtonText.bind(this);
+    this.renderSendingButtonStyle = this.renderSendingButtonStyle.bind(this);
+    this.sendMessage = this.sendMessage.bind(this);
   }
 
   componentWillMount () {
@@ -49,6 +58,7 @@ class ContactUs extends React.Component<void, IProps, void> {
   }
 
   componentDidMount () {
+    this.props.setSending('ready');
     this.props.loadAsync();
   }
 
@@ -70,88 +80,128 @@ class ContactUs extends React.Component<void, IProps, void> {
     });
   }
 
+  sendMessage () {
+    this.props.sendAsync({
+      From: this.state.Email,
+      Subject: `Request from ${this.state.Name}`,
+      Message: this.state.Message
+    });
+  }
+
   renderAddress () {
-    return this.props.data.Address.map(line => (
-      <Row key={line}>
-        <Col lg={12} md={12} sm={12} xs={12}>
-          {line}
-        </Col>
-      </Row>
-    ));
+    return this.props.data.Address !== undefined
+      ? this.props.data.Address.map(line => (
+        <Row key={line}>
+          <Col lg={12} md={12} sm={12} xs={12}>
+            {line}
+          </Col>
+        </Row>
+      ))
+      : null;
   }
 
   renderBusinessHours () {
-    return this.props.data.BusinessHours.map(hour => (
-      <Row key={hour.Day}>
-        <Col lg={12} md={12} sm={12} xs={12}>
-          {hour.Day}: {hour.Hours}
-        </Col>
-      </Row>
-    ));
+    return this.props.data.BusinessHours !== undefined
+      ? this.props.data.BusinessHours.map(hour => (
+        <Row key={hour.Day}>
+          <Col lg={12} md={12} sm={12} xs={12}>
+            {hour.Day}: {hour.Hours}
+          </Col>
+        </Row>
+      ))
+      : null;
+  }
+
+  renderSendingButtonText () {
+    let buttonText = 'Send Message';
+
+    switch (this.props.sending) {
+      case 'sending': { buttonText = 'Sending...'; break; }
+      case 'done': { buttonText = 'Done'; break; }
+      case 'failed': { buttonText = 'Error!'; }
+    }
+
+    return buttonText;
+  }
+
+  renderSendingButtonStyle () {
+    let buttonStyle = 'primary';
+
+    switch (this.props.sending) {
+      case 'failed':
+        buttonStyle = 'danger';
+    }
+
+    return buttonStyle;
   }
 
   render () {
-    return (
-      <div>
-        <PageHeader>
-          <div className="section-header">
-            <h1 className="section-title">Contact Us</h1>
-          </div>
-        </PageHeader>
-        <Grid fluid>
-          <Row>
-            <Col lg={6} md={6} sm={6} xs={6}>
-              <Form>
-                <FormGroup>
-                  <InputGroup>
-                    <InputGroup.Addon><FontAwesome name="user" /></InputGroup.Addon>
-                    <FormControl type="text" onChange={this.updateName} value={this.state.name} />
-                  </InputGroup>
-                </FormGroup>
-                <FormGroup>
-                  <InputGroup>
-                    <InputGroup.Addon><FontAwesome name="envelope" /></InputGroup.Addon>
-                    <FormControl type="text" onChange={this.updateEmail} value={this.state.email} />
-                  </InputGroup>
-                </FormGroup>
-                <FormGroup>
-                  <FormControl
-                    style={{height: '100px'}}
-                    componentClass="textarea"
-                    onChange={this.updateMessage}
-                    value={this.state.Message}
-                  />
-                </FormGroup>
-                <Button bsStyle="primary"><FontAwesome name="location-arrow" />Send Message</Button>
-              </Form>
-            </Col>
-            <Col lg={5} lgOffset={1} md={5} mdOffset={1} sm={6} smOffset={1} xs={6} xsOffset={1}>
-              {this.renderAddress()}
-              <Row>
-                <Col lg={12} md={12} sm={12} xs={12}>
-                  <FontAwesome name="phone" />&nbsp;{this.props.data.Phone}
-                </Col>
-              </Row>
-              <Row>
-                <Col lg={12} md={12} sm={12} xs={12}>
-                  <FontAwesome name="envelope" />&nbsp;{this.props.data.Email}
-                </Col>
-              </Row>
-              {this.renderBusinessHours()}
-              <div className="map">
-                <Image responsive src={`${this.props.app.assetUrl}assets/contact/${this.props.data.Map}`} />
-                <a className="spot" style={{top: this.props.data.Spot.Top}} href={`${this.props.data.GoogleMap}`} target="_blank"><span /></a>
-              </div>
-            </Col>
-          </Row>
-        </Grid>
-      </div>
-    );
+    return this.props.ready
+      ? (
+        <div>
+          <PageHeader>
+            <div className="section-header">
+              <h1 className="section-title">Contact Us</h1>
+            </div>
+          </PageHeader>
+          <Grid fluid>
+            <Row>
+              <Col lg={6} md={6} sm={6} xs={6}>
+                <Form>
+                  <FormGroup>
+                    <InputGroup>
+                      <InputGroup.Addon><FontAwesome name="user" /></InputGroup.Addon>
+                      <FormControl type="text" onChange={this.updateName} value={this.state.name} />
+                    </InputGroup>
+                  </FormGroup>
+                  <FormGroup>
+                    <InputGroup>
+                      <InputGroup.Addon><FontAwesome name="envelope" /></InputGroup.Addon>
+                      <FormControl type="text" onChange={this.updateEmail} value={this.state.email} />
+                    </InputGroup>
+                  </FormGroup>
+                  <FormGroup>
+                    <FormControl
+                      style={{height: '100px'}}
+                      componentClass="textarea"
+                      onChange={this.updateMessage}
+                      value={this.state.Message}
+                    />
+                  </FormGroup>
+                  <Button disabled={this.props.sending !== 'ready'} bsStyle={this.renderSendingButtonStyle()} onClick={this.sendMessage}><FontAwesome name="location-arrow" />{this.renderSendingButtonText()}</Button>
+                </Form>
+              </Col>
+              <Col lg={5} lgOffset={1} md={5} mdOffset={1} sm={6} smOffset={1} xs={6} xsOffset={1}>
+                {this.renderAddress()}
+                <Row>
+                  <Col lg={12} md={12} sm={12} xs={12}>
+                    <FontAwesome name="phone" />&nbsp;{this.props.data.Phone}
+                  </Col>
+                </Row>
+                <Row>
+                  <Col lg={12} md={12} sm={12} xs={12}>
+                    <FontAwesome name="envelope" />&nbsp;{this.props.data.Email}
+                  </Col>
+                </Row>
+                {this.renderBusinessHours()}
+                <div className="map">
+                  <Image responsive src={`${this.props.app.assetUrl}assets/contact/${this.props.data.Map}`} />
+                  <a className="spot" style={{top: this.props.data.Spot.Top}} href={`${this.props.data.GoogleMap}`} target="_blank"><span /></a>
+                </div>
+              </Col>
+            </Row>
+          </Grid>
+        </div>
+      )
+      : (
+        <div>Loading...</div>
+      );
   }
 }
 
 const mapStateToProps = (state) => ({
   app: state.app,
+  sending: state.contactus.sending,
   data: state.contactus.data,
   ready: state.contactus.isReady
 });
@@ -159,7 +209,9 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch: Function) => {
   return bindActionCreators({
     showHeader: appActions.showHeader,
-    loadAsync: contactUsActions.loadContactAsync
+    loadAsync: contactUsActions.loadContactAsync,
+    sendAsync: contactUsActions.sendMessageAsync,
+    setSending: contactUsActions.setSending
   }, dispatch);
 };
 

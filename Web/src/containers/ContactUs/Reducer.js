@@ -5,11 +5,18 @@ const ACTION_HANDLERS = {
   [Keys.LOAD_CONTACT]: (state: Object, action: Action): Object => Object.assign({}, state, {
     data: action.payload,
     isReady: true
+  }),
+  [Keys.SET_SENDING]: (state: Object, action: Action): Object => Object.assign({}, state, {
+    sending: action.payload,
+    isReady: true
   })
 };
 
 export const initialState = {
-  data: {},
+  sending: 'ready',
+  data: {
+
+  },
   isReady: false
 };
 
