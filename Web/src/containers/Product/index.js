@@ -1,13 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { PageHeader, Grid, Col, Row, Thumbnail, ButtonGroup, Button, Form, FormControl, Navbar } from 'react-bootstrap';
+import { PageHeader, Grid, Col, Row, Thumbnail, ButtonGroup, Button, Navbar } from 'react-bootstrap';
 import appActions from '../App/Actions';
 import productActions from './Actions';
 import type IGuitar from '../../models/IGuitar';
 import GuitarPropTypes from '../../models/GuitarPropTypes';
 import type IApp from '../App/IApp';
 import AppPropTypes from '../App/PropTypes';
+import { Form, ValidatedInput } from '../../components/ValidatedInput';
 
 type IProps = {
   id: string,
@@ -72,8 +73,8 @@ class Product extends React.Component <void, IProps, void> {
     });
   }
 
-  onSave () {
-    let guitar = Object.assign({}, this.props.data, this.state);
+  onSave (values) {
+    let guitar = Object.assign({}, this.props.data, values);
     this.props.saveAsync(guitar);
   }
 
@@ -105,7 +106,7 @@ class Product extends React.Component <void, IProps, void> {
                 (this.props.isEdit)
                   ? (
                     <ButtonGroup>
-                      <Button onClick={this.onSave} bsStyle="primary">Save</Button>
+                      <Button type="submit" bsStyle="primary">Save</Button>
                       <Button onClick={this.props.editOff} bsStyle="danger">Cancel</Button>
                     </ButtonGroup>
                   )
@@ -148,10 +149,10 @@ class Product extends React.Component <void, IProps, void> {
               {
                 (this.props.isEdit)
                   ? (
-                    <FormControl
+                    <ValidatedInput
+                      name="Title"
                       type="text"
-                      onChange={this.updateTitle}
-                      value={this.state.Title}
+                      defaultValue={this.props.data.Title}
                     />
                   )
                   : this.props.data.Title
@@ -161,10 +162,10 @@ class Product extends React.Component <void, IProps, void> {
               {
                 (this.props.isEdit)
                   ? (
-                    <FormControl
+                    <ValidatedInput
+                      name="SubTitle"
                       componentClass="textarea"
-                      onChange={this.updateSubTitle}
-                      value={this.state.SubTitle}
+                      defaultValue={this.props.data.SubTitle}
                     />
                   )
                   : this.props.data.SubTitle
@@ -174,11 +175,11 @@ class Product extends React.Component <void, IProps, void> {
               {
                 (this.props.isEdit)
                   ? (
-                    <FormControl
+                    <ValidatedInput
+                      name="Description"
                       style={{height: '100px'}}
                       componentClass="textarea"
-                      onChange={this.updateDescription}
-                      value={this.state.Description}
+                      defaultValue={this.props.data.Description}
                     />
                   )
                   : this.props.data.Description

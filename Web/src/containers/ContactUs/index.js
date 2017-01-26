@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { PageHeader, Grid, Row, Col, FormControl, FormGroup, Form, InputGroup, Button, Image } from 'react-bootstrap';
+import { PageHeader, Grid, Row, Col, Button, Image } from 'react-bootstrap';
 import appActions from '../App/Actions';
 import type IApp from '../App/IApp';
 import AppPropTypes from '../App/PropTypes';
@@ -10,6 +10,7 @@ import type IContactUs from './IContactUs';
 import ContactUsPropTypes from './PropTypes';
 import FontAwesome from 'react-fontawesome';
 import 'font-awesome-webpack';
+import { Form, ValidatedInput } from '../../components/ValidatedInput';
 
 type IProps = {
   app: IApp,
@@ -80,11 +81,11 @@ class ContactUs extends React.Component<void, IProps, void> {
     });
   }
 
-  sendMessage () {
+  sendMessage (values) {
     this.props.sendAsync({
-      From: this.state.Email,
-      Subject: `Request from ${this.state.Name}`,
-      Message: this.state.Message
+      From: values.email,
+      Subject: `Request from ${values.name}`,
+      Message: values.message
     });
   }
 
@@ -147,28 +148,31 @@ class ContactUs extends React.Component<void, IProps, void> {
           <Grid fluid>
             <Row>
               <Col lg={6} md={6} sm={6} xs={6}>
-                <Form>
-                  <FormGroup>
-                    <InputGroup>
-                      <InputGroup.Addon><FontAwesome name="user" /></InputGroup.Addon>
-                      <FormControl type="text" onChange={this.updateName} value={this.state.name} />
-                    </InputGroup>
-                  </FormGroup>
-                  <FormGroup>
-                    <InputGroup>
-                      <InputGroup.Addon><FontAwesome name="envelope" /></InputGroup.Addon>
-                      <FormControl type="text" onChange={this.updateEmail} value={this.state.email} />
-                    </InputGroup>
-                  </FormGroup>
-                  <FormGroup>
-                    <FormControl
-                      style={{height: '100px'}}
-                      componentClass="textarea"
-                      onChange={this.updateMessage}
-                      value={this.state.Message}
-                    />
-                  </FormGroup>
-                  <Button disabled={this.props.sending !== 'ready'} bsStyle={this.renderSendingButtonStyle()} onClick={this.sendMessage}><FontAwesome name="location-arrow" />{this.renderSendingButtonText()}</Button>
+                <Form onValidSubmit={this.sendMessage}>
+                  <ValidatedInput
+                    name="name"
+                    validate="required"
+                    label="Name"
+                    type="text"
+                  />
+                  <ValidatedInput
+                    name="email"
+                    validate="required"
+                    label="Email"
+                    type="text"
+                  />
+                  <ValidatedInput
+                    name="message"
+                    validate="required"
+                    label="Message"
+                    componentClass="textarea"
+                  />
+                  <Button
+                    disabled={this.props.sending !== 'ready'}
+                    type="submit"
+                    bsStyle={this.renderSendingButtonStyle()}>
+                    <FontAwesome name="location-arrow" />{this.renderSendingButtonText()}
+                  </Button>
                 </Form>
               </Col>
               <Col lg={5} lgOffset={1} md={5} mdOffset={1} sm={6} smOffset={1} xs={6} xsOffset={1}>

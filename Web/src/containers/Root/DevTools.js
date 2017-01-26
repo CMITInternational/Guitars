@@ -2,7 +2,6 @@ import React from 'react';
 import { createDevTools } from 'redux-devtools';
 import LogMonitor from 'redux-devtools-log-monitor';
 import DockMonitor from 'redux-devtools-dock-monitor';
-import Inspector from 'redux-devtools-inspector';
 
 export default createDevTools(
   <DockMonitor
@@ -11,7 +10,6 @@ export default createDevTools(
     changeMonitorKey="ctrl-m"
     defaultIsVisible={false}
     defaultPosition="left" >
-    <Inspector />
     <LogMonitor />
   </DockMonitor>
 );

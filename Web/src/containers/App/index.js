@@ -3,12 +3,13 @@ import connect from 'react-redux/lib/components/connect';
 import { bindActionCreators } from 'redux';
 import appActions from './Actions';
 import Alert from 'react-s-alert';
-import { Navbar, Glyphicon, Button, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
+import { Navbar, Glyphicon, Button } from 'react-bootstrap';
 import AppPropTypes from './PropTypes';
 import type IApp from './IApp';
 import Menu from 'react-burger-menu/lib/menus/stack';
 import DocumentTitle from 'react-document-title';
 import ToggleDisplay from 'react-toggle-display';
+import { Form, ValidatedInput } from '../../components/ValidatedInput';
 
 type IProps = {
   app: IApp,
@@ -39,8 +40,7 @@ export class App extends React.Component {
     super(props);
 
     this.state = {
-      expanded: false,
-      authPwd: ''
+      expanded: false
     };
 
     this.hideAuth = this.hideAuth.bind(this);
@@ -50,21 +50,11 @@ export class App extends React.Component {
     this.onMenuStateChange = this.onMenuStateChange.bind(this);
     this.onValidAuth = this.onValidAuth.bind(this);
     this.renderHeader = this.renderHeader.bind(this);
-    this.updatePwd = this.updatePwd.bind(this);
   }
 
-  updatePwd (evt) {
-    this.setState({
-      authPwd: evt.target.value
-    });
-  }
-
-  onValidAuth () {
-    this.props.authenticateAsAdmin(this.state.authPwd)
+  onValidAuth (values) {
+    this.props.authenticateAsAdmin(values.password)
       .then(() => {
-        this.setState({
-          authPwd: ''
-        });
         this.hideAuth();
       })
       .catch(() => {
@@ -150,14 +140,19 @@ export class App extends React.Component {
                 {brand}
               </Navbar.Brand>
               <ToggleDisplay show={this.props.app.showAuth}>
-                <Navbar.Form pullLeft>
-                  <FormGroup controlId="password">
-                    <ControlLabel>Password</ControlLabel>
-                    <FormControl type="password" onChange={this.updatePwd} value={this.state.authPwd} />
-                  </FormGroup>
-                  <Button bsStyle="primary" onClick={this.onValidAuth}>Submit</Button>
+                <Form onValidSubmit={this.onValidAuth}>
+                  <ValidatedInput
+                    name="password"
+                    type="password"
+                    label="Password"
+                    validate="required"
+                    errorHelp={{
+                      required: 'Please specify a password'
+                    }}
+                  />
+                  <Button type="submit" bsStyle="primary">Submit</Button>
                   <Button onClick={this.hideAuth}>Cancel</Button>
-                </Navbar.Form>
+                </Form>
               </ToggleDisplay>
             </Navbar.Header>
           </Navbar>
