@@ -100,14 +100,14 @@ namespace Web.Controllers
 
         [Route("api/portfolio/{id}/remove")]
         [HttpPost]
-        public bool Remove(string id)
+        public List<PortfolioViewModel> Remove(string id)
         {
             var dataFileDirectory = Path.Combine(PortfolioBase, id);
             if (Directory.Exists(dataFileDirectory))
             {
                 Directory.Delete(dataFileDirectory, true);
             }
-            return true;
+            return Get(true);
         }
 
         [Route("api/portfolio/uploadfile")]
@@ -171,6 +171,10 @@ namespace Web.Controllers
                     }
                     else
                     {
+                        if (portfolio.Images == null)
+                        {
+                            portfolio.Images = new List<string>();
+                        }
                         if (!portfolio.Images.Contains(webFileName))
                         {
                             portfolio.Images.Add(webFileName);

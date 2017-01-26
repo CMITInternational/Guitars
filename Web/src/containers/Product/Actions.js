@@ -79,7 +79,7 @@ const saveProductAsync = (guitar: IGuitar): Function => {
   };
 };
 
-const saveProductImagesAsync = (images): Function => {
+const saveProductImagesAsync = (images, isThumbnail): Function => {
   return (dispatch: Function, getState: Function): Promise => {
     return new Promise((resolve: Function, reject: Function): void => {
       let apiUrl = getState().app.apiUrl;
@@ -89,7 +89,7 @@ const saveProductImagesAsync = (images): Function => {
         let form = new FormData();
         form.append('UploadedImage', images[0]);
         form.append('Project', productId);
-        form.append('IsThumbNail', false);
+        form.append('IsThumbNail', isThumbnail);
         omniPostData(fullUrl, form)
           .then((response) => {
             let data = response.body;

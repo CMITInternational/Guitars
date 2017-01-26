@@ -15,6 +15,7 @@ type IProps = {
   app: IApp,
   guitars: IGuitarList,
   loadAsync: Function,
+  removeProductAsync: Function,
   saveAsync: Function,
   goToProduct: Function,
   showHeader: Function
@@ -26,6 +27,7 @@ class Products extends React.Component<void, IProps, void> {
     guitars: React.PropTypes.shape(GuitarListPropTypes),
     goToProduct: React.PropTypes.func.isRequired,
     loadAsync: React.PropTypes.func.isRequired,
+    removeProductAsync: React.PropTypes.func.isRequired,
     saveAsync: React.PropTypes.func.isRequired,
     showHeader: React.PropTypes.func.isRequired
   };
@@ -53,11 +55,26 @@ class Products extends React.Component<void, IProps, void> {
     this.props.loadAsync();
   }
 
+  removeProduct (id) {
+    this.props.removeProductAsync(id);
+  }
+
+  generateRemoveProduct (id) {
+    return () => {
+      this.removeProduct(id);
+    };
+  }
+
   renderGuitar (guitar) {
     let thumbUrl = `${this.props.app.assetUrl}${guitar.Path}/${guitar.Thumb}`;
 
     return (
       <Col xs={12} sm={6} md={6} lg={6} key={guitar.Id}>
+        {
+          (this.props.app.isAdmin)
+            ? (<Button bsStyle="danger" className="close" onClick={this.generateRemoveProduct(guitar.Id)}>&times;</Button>)
+            : null
+        }
         <Thumbnail src={thumbUrl}>
           <h3>{guitar.Title}</h3>
           <p>{guitar.Description}</p>
@@ -122,6 +139,7 @@ const mapDispatchToProps = (dispatch: Function) => {
     goToProduct: (id) => routerActions.push(`/product/${id}`),
     saveAsync: productActions.saveProductAsync,
     loadAsync: productsActions.loadProductsAsync,
+    removeProductAsync: productsActions.removeProductAsync,
     showHeader: appActions.showHeader
   }, dispatch);
 };

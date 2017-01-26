@@ -73,12 +73,12 @@ class Product extends React.Component <void, IProps, void> {
   }
 
   onSave (values) {
-    let {files, ...otherFormData} = values;
+    let {files, isThumbnail, ...otherFormData} = values;
     let guitar = Object.assign({}, this.props.data, this.state, otherFormData);
     this.props.saveAsync(guitar)
       .then(() => {
         if (files !== undefined && files.length > 0) {
-          this.props.saveProductImagesAsync(files);
+          this.props.saveProductImagesAsync(files, isThumbnail);
         }
       });
   }
@@ -240,6 +240,11 @@ class Product extends React.Component <void, IProps, void> {
                       label="New Images"
                       multiple
                       validate={this.validateFiles}
+                    />
+                    <ValidatedInput
+                      name="isThumbnail"
+                      type="checkbox"
+                      label="Thumbnail"
                     />
                   </Col>
                 </Row>
