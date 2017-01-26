@@ -9,6 +9,7 @@ import GuitarPropTypes from '../../models/GuitarPropTypes';
 import type IApp from '../App/IApp';
 import AppPropTypes from '../App/PropTypes';
 import { Form, ValidatedInput, FileValidator } from '../../components/ValidatedInput';
+import _ from 'lodash';
 
 type IProps = {
   id: string,
@@ -43,10 +44,7 @@ class Product extends React.Component <void, IProps, void> {
     super(props);
 
     this.state = {
-      Id: '',
-      Title: '',
-      SubTitle: '',
-      Description: ''
+      Images: []
     };
 
     this.renderProduct = this.renderProduct.bind(this);
@@ -57,6 +55,7 @@ class Product extends React.Component <void, IProps, void> {
     this.updateSubTitle = this.updateSubTitle.bind(this);
     this.updateDescription = this.updateDescription.bind(this);
     this.validateFiles = this.validateFiles.bind(this);
+    this.cancelEdit = this.cancelEdit.bind(this);
   }
 
   componentWillMount () {
@@ -69,16 +68,13 @@ class Product extends React.Component <void, IProps, void> {
 
   componentWillReceiveProps (nextProps: IProps) {
     this.setState({
-      Id: nextProps.data.Id,
-      Title: nextProps.data.Title,
-      SubTitle: nextProps.data.SubTitle,
-      Description: nextProps.data.Description
+      Images: nextProps.data.Images
     });
   }
 
   onSave (values) {
     let {files, ...otherFormData} = values;
-    let guitar = Object.assign({}, this.props.data, otherFormData);
+    let guitar = Object.assign({}, this.props.data, this.state, otherFormData);
     this.props.saveAsync(guitar)
       .then(() => {
         if (files !== undefined && files.length > 0) {
@@ -87,11 +83,25 @@ class Product extends React.Component <void, IProps, void> {
       });
   }
 
-  validateFiles (files) {
-    if (FileValidator.isEmpty(files)) {
-      return 'Please select a file';
-    }
+  cancelEdit () {
+    this.props.editOff();
+    this.props.loadAsync(this.props.id);
+  }
 
+  removeImage (id) {
+    let images = _.filter(this.state.Images, image => image !== id);
+    this.setState({
+      Images: images
+    });
+  }
+
+  generateRemoveImage (id) {
+    return () => {
+      this.removeImage(id);
+    };
+  }
+
+  validateFiles (files) {
     if (!FileValidator.isEachFileSize(files, 0, 1048576)) {
       return 'Each file must not be larger than 1MB';
     }
@@ -104,12 +114,17 @@ class Product extends React.Component <void, IProps, void> {
   }
 
   renderImages () {
-    if (this.props.data.Images !== undefined && this.props.data.Images !== null && this.props.data.Images.length > 0) {
+    if (this.state.Images !== undefined && this.state.Images !== null && this.state.Images.length > 0) {
       return (
         <Row>
-          {this.props.data.Images.map(image => {
+          {this.state.Images.map(image => {
             return (
               <Col key={image} lg={6} md={6} sm={6} xs={6}>
+                {
+                  (this.props.isEdit)
+                    ? (<Button bsStyle="danger" className="close" onClick={this.generateRemoveImage(image)}>&times;</Button>)
+                    : null
+                }
                 <Thumbnail src={`${this.props.app.assetUrl}${this.props.data.Path}/${image}`} />
               </Col>
             );
@@ -132,7 +147,7 @@ class Product extends React.Component <void, IProps, void> {
                   ? (
                     <ButtonGroup>
                       <Button type="submit" bsStyle="primary">Save</Button>
-                      <Button onClick={this.props.editOff} bsStyle="danger">Cancel</Button>
+                      <Button onClick={this.cancelEdit} bsStyle="danger">Cancel</Button>
                     </ButtonGroup>
                   )
                   : (
