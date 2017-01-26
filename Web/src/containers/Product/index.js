@@ -8,7 +8,7 @@ import type IGuitar from '../../models/IGuitar';
 import GuitarPropTypes from '../../models/GuitarPropTypes';
 import type IApp from '../App/IApp';
 import AppPropTypes from '../App/PropTypes';
-import { Form, ValidatedInput } from '../../components/ValidatedInput';
+import { Form, ValidatedInput, FileValidator } from '../../components/ValidatedInput';
 
 type IProps = {
   id: string,
@@ -18,6 +18,7 @@ type IProps = {
   isEdit: boolean,
   showHeader: Function,
   loadAsync: Function,
+  saveProductImagesAsync: Function,
   saveAsync: Function,
   editOn: Function,
   editOff: Function
@@ -32,6 +33,7 @@ class Product extends React.Component <void, IProps, void> {
     isEdit: React.PropTypes.bool.isRequired,
     showHeader: React.PropTypes.func.isRequired,
     loadAsync: React.PropTypes.func.isRequired,
+    saveProductImagesAsync: React.PropTypes.func.isRequired,
     saveAsync: React.PropTypes.func.isRequired,
     editOn: React.PropTypes.func.isRequired,
     editOff: React.PropTypes.func.isRequired
@@ -54,6 +56,7 @@ class Product extends React.Component <void, IProps, void> {
     this.updateTitle = this.updateTitle.bind(this);
     this.updateSubTitle = this.updateSubTitle.bind(this);
     this.updateDescription = this.updateDescription.bind(this);
+    this.validateFiles = this.validateFiles.bind(this);
   }
 
   componentWillMount () {
@@ -74,8 +77,30 @@ class Product extends React.Component <void, IProps, void> {
   }
 
   onSave (values) {
-    let guitar = Object.assign({}, this.props.data, values);
-    this.props.saveAsync(guitar);
+    let {files, ...otherFormData} = values;
+    let guitar = Object.assign({}, this.props.data, otherFormData);
+    this.props.saveAsync(guitar)
+      .then(() => {
+        if (files !== undefined && files.length > 0) {
+          this.props.saveProductImagesAsync(files);
+        }
+      });
+  }
+
+  validateFiles (files) {
+    if (FileValidator.isEmpty(files)) {
+      return 'Please select a file';
+    }
+
+    if (!FileValidator.isEachFileSize(files, 0, 1048576)) {
+      return 'Each file must not be larger than 1MB';
+    }
+
+    if (!FileValidator.isExtension(files, ['png', 'jpg'])) {
+      return 'Only png or jpg files are allowed';
+    }
+
+    return true;
   }
 
   renderImages () {
@@ -188,6 +213,24 @@ class Product extends React.Component <void, IProps, void> {
           </div>
         </PageHeader>
         <Grid fluid>
+          {
+            (this.props.isEdit)
+              ? (
+                <Row>
+                  <Col lg={12} md={12} sm={12} xs={12}>
+                    <ValidatedInput
+                      ref="files"
+                      name="files"
+                      type="file"
+                      label="New Images"
+                      multiple
+                      validate={this.validateFiles}
+                    />
+                  </Col>
+                </Row>
+              )
+            : null
+          }
           {this.renderImages()}
         </Grid>
       </div>
@@ -227,6 +270,7 @@ const mapDispatchToProps = (dispatch: Function) => {
   return bindActionCreators({
     showHeader: appActions.showHeader,
     loadAsync: productActions.loadProductAsync,
+    saveProductImagesAsync: productActions.saveProductImagesAsync,
     saveAsync: productActions.saveProductAsync,
     editOn: productActions.editProductOn,
     editOff: productActions.editProductOff

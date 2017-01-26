@@ -112,7 +112,7 @@ namespace Web.Controllers
 
         [Route("api/portfolio/uploadfile")]
         [HttpPost]
-        public async Task<HttpResponseMessage> UploadFile()
+        public async Task<Portfolio> UploadFile()
         {
             // Check if the request contains multipart/form-data.
             if (!Request.Content.IsMimeMultipartContent())
@@ -124,9 +124,6 @@ namespace Web.Controllers
             var bodyPartTempDir = HttpContext.Current.Server.MapPath("~/App_Data");
             var provider = new MultipartFormDataStreamProvider(bodyPartTempDir);
 
-            try
-            {
-                var sb = new StringBuilder(); // Holds the response body
                 var postedProject = String.Empty;
                 var isThumbNail = false;
 
@@ -180,18 +177,9 @@ namespace Web.Controllers
                         }
                     }
                     Post(portfolio);
-                    sb.Append(string.Format("Uploaded file: {0} ({1} bytes)\n", webFileName, postedFile.Length));
                 }
 
-                return new HttpResponseMessage()
-                {
-                    Content = new StringContent(sb.ToString())
-                };
-            }
-            catch (System.Exception e)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
-            }
+                return Get(postedProject);
         }
 
         [Route("api/portfolio/removeImage")]

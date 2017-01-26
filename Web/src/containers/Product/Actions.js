@@ -1,6 +1,7 @@
 import Keys from './Keys';
 import omnifetch from '../../lib/fetch/omnifetch';
 import omniPost from '../../lib/fetch/omnipost';
+import omniPostData from '../../lib/fetch/omnipostdata';
 import type IGuitar from '../../models/IGuitar';
 
 const clearProduct = (): Action => {
@@ -78,9 +79,40 @@ const saveProductAsync = (guitar: IGuitar): Function => {
   };
 };
 
+const saveProductImagesAsync = (images): Function => {
+  return (dispatch: Function, getState: Function): Promise => {
+    return new Promise((resolve: Function, reject: Function): void => {
+      let apiUrl = getState().app.apiUrl;
+      let productId = getState().product.data.Id;
+      if (images !== undefined) {
+        let fullUrl = `${apiUrl}portfolio/uploadfile`;
+        let form = new FormData();
+        form.append('UploadedImage', images[0]);
+        form.append('Project', productId);
+        form.append('IsThumbNail', false);
+        omniPostData(fullUrl, form)
+          .then((response) => {
+            let data = response.body;
+            if (data !== undefined && typeof data === 'object') {
+              dispatch(loadProductAsync(data.Id))
+                .then(() => resolve(data.Id))
+                .catch(reject);
+            } else {
+              resolve();
+            }
+          })
+          .catch(reject);
+      } else {
+        reject('images must be populated for save');
+      }
+    });
+  };
+};
+
 const Actions = {
   loadProductAsync,
   saveProductAsync,
+  saveProductImagesAsync,
   editProductOn,
   editProductOff
 };
