@@ -17,6 +17,7 @@ type IProps = {
   loadAsync: Function,
   removeProductAsync: Function,
   saveAsync: Function,
+  editProductOn: Function,
   goToProduct: Function,
   showHeader: Function
 }
@@ -28,6 +29,7 @@ class Products extends React.Component<void, IProps, void> {
     goToProduct: React.PropTypes.func.isRequired,
     loadAsync: React.PropTypes.func.isRequired,
     removeProductAsync: React.PropTypes.func.isRequired,
+    editProductOn: React.PropTypes.func.isRequired,
     saveAsync: React.PropTypes.func.isRequired,
     showHeader: React.PropTypes.func.isRequired
   };
@@ -92,6 +94,7 @@ class Products extends React.Component<void, IProps, void> {
       SubTitle: 'New Guitar',
       Description: 'A New Guitar'
     }).then((Id) => {
+      this.props.editProductOn();
       this.props.goToProduct(Id);
     });
   }
@@ -138,6 +141,7 @@ const mapDispatchToProps = (dispatch: Function) => {
   return bindActionCreators({
     goToProduct: (id) => routerActions.push(`/product/${id}`),
     saveAsync: productActions.saveProductAsync,
+    editProductOn: productActions.editProductOn,
     loadAsync: productsActions.loadProductsAsync,
     removeProductAsync: productsActions.removeProductAsync,
     showHeader: appActions.showHeader

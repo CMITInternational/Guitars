@@ -78,7 +78,12 @@ class Product extends React.Component <void, IProps, void> {
     this.props.saveAsync(guitar)
       .then(() => {
         if (files !== undefined && files.length > 0) {
-          this.props.saveProductImagesAsync(files, isThumbnail);
+          this.props.saveProductImagesAsync(files, isThumbnail)
+            .then(() => {
+              this.props.editOff();
+            });
+        } else {
+          this.props.editOff();
         }
       });
   }

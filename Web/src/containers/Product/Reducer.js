@@ -1,7 +1,10 @@
 import Keys from './Keys';
 
 const ACTION_HANDLERS = {
-  [Keys.CLEAR_PRODUCT]: (state: Object, action: Action): Object => Object.assign({}, state, initialState),
+  [Keys.CLEAR_PRODUCT]: (state: Object, action: Action): Object => Object.assign({}, state, {
+    data: initialState.data,
+    isReady: initialState.isReady
+  }),
   [Keys.LOAD_PRODUCT]: (state: Object, action: Action): Object => Object.assign({}, state, {
     data: action.payload,
     isReady: true

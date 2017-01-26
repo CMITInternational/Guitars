@@ -168,6 +168,7 @@ namespace Web.Controllers
                     if (isThumbNail)
                     {
                         portfolio.Thumb = webFileName;
+                        isThumbNail = false;
                     }
                     else
                     {
