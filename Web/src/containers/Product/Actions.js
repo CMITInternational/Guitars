@@ -3,6 +3,7 @@ import omnifetch from '../../lib/fetch/omnifetch';
 import omniPost from '../../lib/fetch/omnipost';
 import omniPostData from '../../lib/fetch/omnipostdata';
 import type IGuitar from '../../models/IGuitar';
+import _ from 'lodash';
 
 const clearProduct = (): Action => {
   return {
@@ -87,7 +88,10 @@ const saveProductImagesAsync = (images, isThumbnail): Function => {
       if (images !== undefined) {
         let fullUrl = `${apiUrl}portfolio/uploadfile`;
         let form = new FormData();
-        form.append('UploadedImage', images[0]);
+        let idx = 0;
+        _.forEach(images, image => {
+          form.append(`UploadedImage${idx++}`, image);
+        });
         form.append('Project', productId);
         form.append('IsThumbNail', isThumbnail);
         omniPostData(fullUrl, form)
