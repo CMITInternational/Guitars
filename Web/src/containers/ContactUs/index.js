@@ -55,7 +55,10 @@ class ContactUs extends React.Component<void, IProps, void> {
   }
 
   componentWillMount () {
-    this.props.showHeader(true);
+    this.props.showHeader({
+      willShowHeader: true,
+      hasAdminHeader: false
+    });
   }
 
   componentDidMount () {
@@ -212,7 +215,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch: Function) => {
   return bindActionCreators({
-    showHeader: appActions.showHeader,
+    showHeader: appActions.showHeaderAsync,
     loadAsync: contactUsActions.loadContactAsync,
     sendAsync: contactUsActions.sendMessageAsync,
     setSending: contactUsActions.setSending

@@ -82,7 +82,10 @@ class Home extends React.Component<void, IProps, void> {
   }
 
   componentWillMount () {
-    this.props.showHeader(false);
+    this.props.showHeader({
+      willShowHeader: false,
+      hasAdminHeader: false
+    });
     this.swapContent();
     if (this.state.processId === undefined) {
       this.setState({
@@ -161,7 +164,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = (dispatch: Function) => {
   return bindActionCreators({
-    showHeader: appActions.showHeader,
+    showHeader: appActions.showHeaderAsync,
     redirectToProducts: appActions.redirectToProducts
   }, dispatch);
 };

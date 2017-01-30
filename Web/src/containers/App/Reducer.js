@@ -16,6 +16,9 @@ const ACTION_HANDLERS = {
   [Keys.SET_IS_ADMIN]: (state: Object, action: Action): Object => Object.assign({}, state, {
     isAdmin: action.payload
   }),
+  [Keys.SET_BM_OFFSET]: (state: Object, action: Action): Object => Object.assign({}, state, {
+    bmOffset: action.payload
+  }),
   [Keys.LOAD_APP_CONFIG]: (state: Object, action: Action): Object => Object.assign({}, state, {
     apiUrl: action.payload.apiUrl,
     assetUrl: action.payload.assetUrl,
@@ -31,7 +34,8 @@ export const initialState = {
   showHeader: false,
   showAuth: false,
   showAuthError: false,
-  isAdmin: false
+  isAdmin: false,
+  bmOffset: 0
 };
 
 export default function appReducer (state: object = initialState, action: Action): object {

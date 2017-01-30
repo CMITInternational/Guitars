@@ -126,9 +126,22 @@ export class App extends React.Component {
     let brand = (<div>{title} {logInButton}</div>);
 
     if (this.props.app.showHeader) {
+      var bmTop = 50 + ((this.props.app.isAdmin) ? this.props.app.bmOffset : 0);
+      var bmStyles = {
+        bmOverlay: {
+          top: `${bmTop}px`
+        },
+        bmMenuWrap: {
+          top: `${bmTop}px`
+        }
+      };
+
+      console.log(`bmTop(${bmTop})`);
+
       return (
         <div>
-          <Menu right isOpen={this.state.expanded} onStateChange={this.onMenuStateChange}>
+          <div>&nbsp;</div>
+          <Menu right isOpen={this.state.expanded} onStateChange={this.onMenuStateChange} styles={bmStyles}>
             <div onClick={this.generateRedirect(this.props.redirectToHome)} className="menu-item">Home</div>
             <div onClick={this.generateRedirect(this.props.redirectToProducts)} className="menu-item">Products</div>
             <div onClick={this.generateRedirect(this.props.redirectToContactUs)} className="menu-item">Contact Us</div>

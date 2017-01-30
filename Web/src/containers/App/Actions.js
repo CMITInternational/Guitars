@@ -70,6 +70,25 @@ const isAdmin = (data): Action => {
   };
 };
 
+const bmOffset = (offset): Action => {
+  return {
+    type: Keys.SET_BM_OFFSET,
+    payload: offset
+  };
+};
+
+const showHeaderAsync = (data): Function => {
+  return (dispatch: Function, getState: Function): Promise => {
+    return new Promise((resolve: Function, reject: Function): void => {
+      let {willShowHeader, hasAdminHeader} = data;
+
+      dispatch(showHeader(willShowHeader));
+      dispatch(bmOffset((hasAdminHeader) ? 70 : 0));
+      resolve();
+    });
+  };
+};
+
 const authenticateAsAdmin = (password): Function => {
   return (dispatch: Function, getState: Function): Promise => {
     return new Promise((resolve: Function, reject: Function): void => {
@@ -139,7 +158,8 @@ const Actions = {
   redirectToProducts,
   redirectToContactUs,
   redirectToHome,
-  redirectToProduct
+  redirectToProduct,
+  showHeaderAsync
 };
 
 export default Actions;

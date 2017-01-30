@@ -59,7 +59,10 @@ class Product extends React.Component <void, IProps, void> {
   }
 
   componentWillMount () {
-    this.props.showHeader(true);
+    this.props.showHeader({
+      willShowHeader: true,
+      hasAdminHeader: true
+    });
   }
 
   componentDidMount () {
@@ -124,7 +127,7 @@ class Product extends React.Component <void, IProps, void> {
         <Row>
           {this.state.Images.map(image => {
             return (
-              <Col key={image} lg={6} md={6} sm={6} xs={6}>
+              <Col key={image} xs={12} sm={6} md={6} lg={3}>
                 {
                   (this.props.isEdit)
                     ? (<Button bsStyle="danger" className="close" onClick={this.generateRemoveImage(image)}>&times;</Button>)
@@ -144,7 +147,7 @@ class Product extends React.Component <void, IProps, void> {
   renderAdminButtons () {
     return (this.props.app.isAdmin)
       ? (
-        <Navbar fixTop style={{paddingTop: '50px'}}>
+        <Navbar fixedTop style={{top: '50px'}}>
           <Navbar.Header>
             <Navbar.Form pullLeft>
               {
@@ -237,7 +240,7 @@ class Product extends React.Component <void, IProps, void> {
             (this.props.isEdit)
               ? (
                 <Row>
-                  <Col lg={12} md={12} sm={12} xs={12}>
+                  <Col xs={12} sm={6} md={6} lg={3}>
                     <ValidatedInput
                       ref="files"
                       name="files"
@@ -246,7 +249,18 @@ class Product extends React.Component <void, IProps, void> {
                       multiple
                       validate={this.validateFiles}
                     />
+                  </Col>
+                </Row>
+              )
+              : null
+          }
+          {
+            (this.props.isEdit)
+              ? (
+                <Row>
+                  <Col xs={12} sm={6} md={6} lg={3}>
                     <ValidatedInput
+                      style={{width: 'auto', boxShaddow: 'none'}}
                       name="isThumbnail"
                       type="checkbox"
                       label="Thumbnail"
@@ -293,7 +307,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = (dispatch: Function) => {
   return bindActionCreators({
-    showHeader: appActions.showHeader,
+    showHeader: appActions.showHeaderAsync,
     loadAsync: productActions.loadProductAsync,
     saveProductImagesAsync: productActions.saveProductImagesAsync,
     saveAsync: productActions.saveProductAsync,

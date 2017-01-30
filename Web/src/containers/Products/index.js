@@ -50,7 +50,10 @@ class Products extends React.Component<void, IProps, void> {
   };
 
   componentWillMount () {
-    this.props.showHeader(true);
+    this.props.showHeader({
+      willShowHeader: true,
+      hasAdminHeader: true
+    });
   }
 
   componentDidMount () {
@@ -71,7 +74,7 @@ class Products extends React.Component<void, IProps, void> {
     let thumbUrl = `${this.props.app.assetUrl}${guitar.Path}/${guitar.Thumb}`;
 
     return (
-      <Col xs={12} sm={6} md={6} lg={6} key={guitar.Id}>
+      <Col xs={12} sm={6} md={6} lg={3} key={guitar.Id}>
         {
           (this.props.app.isAdmin)
             ? (<Button bsStyle="danger" className="close" onClick={this.generateRemoveProduct(guitar.Id)}>&times;</Button>)
@@ -102,7 +105,7 @@ class Products extends React.Component<void, IProps, void> {
   renderAdminButtons () {
     return (this.props.app.isAdmin)
       ? (
-        <Navbar fixTop style={{paddingTop: '50px'}}>
+        <Navbar fixedTop style={{top: '50px'}}>
           <Navbar.Header>
             <Navbar.Form pullLeft>
               <Button bsStyle="primary" onClick={this.onNewProduct}>New</Button>
@@ -144,7 +147,7 @@ const mapDispatchToProps = (dispatch: Function) => {
     editProductOn: productActions.editProductOn,
     loadAsync: productsActions.loadProductsAsync,
     removeProductAsync: productsActions.removeProductAsync,
-    showHeader: appActions.showHeader
+    showHeader: appActions.showHeaderAsync
   }, dispatch);
 };
 
