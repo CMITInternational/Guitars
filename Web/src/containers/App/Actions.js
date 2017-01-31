@@ -83,7 +83,7 @@ const showHeaderAsync = (data): Function => {
       let {willShowHeader, hasAdminHeader} = data;
 
       dispatch(showHeader(willShowHeader));
-      dispatch(bmOffset((hasAdminHeader) ? 70 : 0));
+      dispatch(bmOffset((hasAdminHeader) ? 50 : 0));
       resolve();
     });
   };

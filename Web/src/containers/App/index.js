@@ -136,8 +136,6 @@ export class App extends React.Component {
         }
       };
 
-      console.log(`bmTop(${bmTop})`);
-
       return (
         <div>
           <div>&nbsp;</div>
