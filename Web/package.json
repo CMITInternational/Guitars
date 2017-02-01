@@ -102,6 +102,7 @@
     "react-document-title": "^2.0.2",
     "react-dom": "^15.4.2",
     "react-dropdown": "1.0.4",
+    "react-dropzone": "^3.9.2",
     "react-fontawesome": "^1.5.0",
     "react-loader-advanced": "^1.1.2",
     "react-masonry-component": "^5.0.3",

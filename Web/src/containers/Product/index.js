@@ -10,6 +10,7 @@ import type IApp from '../App/IApp';
 import AppPropTypes from '../App/PropTypes';
 import { Form, ValidatedInput, FileValidator } from '../../components/ValidatedInput';
 import _ from 'lodash';
+import DropZone from 'react-dropzone';
 
 type IProps = {
   id: string,
@@ -44,7 +45,9 @@ class Product extends React.Component <void, IProps, void> {
     super(props);
 
     this.state = {
-      Images: []
+      Images: [],
+      droppedImages: [],
+      droppedThumbImages: []
     };
 
     this.renderProduct = this.renderProduct.bind(this);
@@ -56,6 +59,36 @@ class Product extends React.Component <void, IProps, void> {
     this.updateDescription = this.updateDescription.bind(this);
     this.validateFiles = this.validateFiles.bind(this);
     this.cancelEdit = this.cancelEdit.bind(this);
+    this.onDrop = this.onDrop.bind(this);
+    this.onThumbDrop = this.onThumbDrop.bind(this);
+    this.clearDroppedImages = this.clearDroppedImages.bind(this);
+    this.clearDroppedThumbImages = this.clearDroppedThumbImages.bind(this);
+  }
+
+  onDrop (acceptedFiles, rejectedFiles) {
+    let droppedImages = [...acceptedFiles, ...this.state.droppedImages];
+    this.setState({
+      droppedImages
+    });
+  }
+
+  clearDroppedImages () {
+    this.setState({
+      droppedImages: []
+    });
+  }
+
+  onThumbDrop (acceptedFiles, rejectedFiles) {
+    let droppedThumbImages = [...acceptedFiles, ...this.state.droppedThumbImages];
+    this.setState({
+      droppedThumbImages
+    });
+  }
+
+  clearDroppedThumbImages () {
+    this.setState({
+      droppedThumbImages: []
+    });
   }
 
   componentWillMount () {
@@ -76,8 +109,9 @@ class Product extends React.Component <void, IProps, void> {
   }
 
   onSave (values) {
-    let {files, isThumbnail, ...otherFormData} = values;
-    let guitar = Object.assign({}, this.props.data, this.state, otherFormData);
+    let files = [...this.state.droppedImages, ...this.state.droppedThumbImages];
+    let isThumbnail = this.state.droppedThumbImages.length > 0;
+    let guitar = Object.assign({}, this.props.data, {Images: this.state.Images}, values);
     this.props.saveAsync(guitar)
       .then(() => {
         if (files !== undefined && files.length > 0) {
@@ -240,15 +274,18 @@ class Product extends React.Component <void, IProps, void> {
             (this.props.isEdit)
               ? (
                 <Row>
-                  <Col xs={12} sm={6} md={6} lg={3}>
-                    <ValidatedInput
-                      ref="files"
-                      name="files"
-                      type="file"
-                      label="New Images"
-                      multiple
-                      validate={this.validateFiles}
-                    />
+                  <Col xs={12} sm={12} md={6} lg={6}>
+                    <DropZone onDrop={this.onDrop}>
+                      <div>Drop new images here</div>
+                    </DropZone>
+                  </Col>
+                  {this.state.droppedImages.map(image => (
+                    <Col xs={12} sm={12} md={6} lg={6}>
+                      <Thumbnail src={image.preview} />
+                    </Col>
+                  ))}
+                  <Col xs={12} sm={12} md={6} lg={6}>
+                    <Button onClick={this.clearDroppedImages}>Clear</Button>
                   </Col>
                 </Row>
               )
@@ -258,17 +295,22 @@ class Product extends React.Component <void, IProps, void> {
             (this.props.isEdit)
               ? (
                 <Row>
-                  <Col xs={12} sm={6} md={6} lg={3}>
-                    <ValidatedInput
-                      style={{width: 'auto', boxShaddow: 'none'}}
-                      name="isThumbnail"
-                      type="checkbox"
-                      label="Thumbnail"
-                    />
+                  <Col xs={12} sm={12} md={6} lg={6}>
+                    <DropZone onDrop={this.onThumbDrop}>
+                      <div>Drop new thumbnail image here</div>
+                    </DropZone>
+                  </Col>
+                  {this.state.droppedThumbImages.map(image => (
+                    <Col xs={12} sm={12} md={6} lg={6}>
+                      <Thumbnail src={image.preview} />
+                    </Col>
+                  ))}
+                  <Col xs={12} sm={12} md={6} lg={6}>
+                    <Button onClick={this.clearDroppedThumbImages}>Clear</Button>
                   </Col>
                 </Row>
               )
-            : null
+              : null
           }
           {this.renderImages()}
         </Grid>
