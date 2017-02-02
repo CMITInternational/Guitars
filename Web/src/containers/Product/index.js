@@ -63,6 +63,12 @@ class Product extends React.Component <void, IProps, void> {
     this.onThumbDrop = this.onThumbDrop.bind(this);
     this.clearDroppedImages = this.clearDroppedImages.bind(this);
     this.clearDroppedThumbImages = this.clearDroppedThumbImages.bind(this);
+    this.removeImage = this.removeImage.bind(this);
+    this.generateRemoveImage = this.generateRemoveImage.bind(this);
+    this.removeDroppedImage = this.removeDroppedImage.bind(this);
+    this.generateRemoveDroppedImage = this.generateRemoveDroppedImage.bind(this);
+    this.removeDroppedThumbImage = this.removeDroppedThumbImage.bind(this);
+    this.generateRemoveDroppedThumbImage = this.generateRemoveDroppedThumbImage.bind(this);
   }
 
   onDrop (acceptedFiles, rejectedFiles) {
@@ -140,6 +146,32 @@ class Product extends React.Component <void, IProps, void> {
   generateRemoveImage (id) {
     return () => {
       this.removeImage(id);
+    };
+  }
+
+  removeDroppedThumbImage (id) {
+    let droppedThumbImages = _.filter(this.state.droppedThumbImages, droppedThumbImage => droppedThumbImage !== id);
+    this.setState({
+      droppedThumbImages
+    });
+  }
+
+  generateRemoveDroppedThumbImage (id) {
+    return () => {
+      this.removeDroppedThumbImage(id);
+    };
+  }
+
+  removeDroppedImage (id) {
+    let droppedImages = _.filter(this.state.droppedImages, droppedImage => droppedImage !== id);
+    this.setState({
+      droppedImages
+    });
+  }
+
+  generateRemoveDroppedImage (id) {
+    return () => {
+      this.removeDroppedImage(id);
     };
   }
 
@@ -281,12 +313,14 @@ class Product extends React.Component <void, IProps, void> {
                   </Col>
                   {this.state.droppedImages.map(image => (
                     <Col xs={12} sm={12} md={6} lg={6}>
+                      {
+                        (this.props.isEdit)
+                          ? (<Button bsStyle="danger" className="close" onClick={this.generateRemoveDroppedImage(image)}>&times;</Button>)
+                          : null
+                      }
                       <Thumbnail src={image.preview} />
                     </Col>
                   ))}
-                  <Col xs={12} sm={12} md={6} lg={6}>
-                    <Button onClick={this.clearDroppedImages}>Clear</Button>
-                  </Col>
                 </Row>
               )
               : null
@@ -302,12 +336,14 @@ class Product extends React.Component <void, IProps, void> {
                   </Col>
                   {this.state.droppedThumbImages.map(image => (
                     <Col xs={12} sm={12} md={6} lg={6}>
+                      {
+                        (this.props.isEdit)
+                          ? (<Button bsStyle="danger" className="close" onClick={this.generateRemoveDroppedThumbImage(image)}>&times;</Button>)
+                          : null
+                      }
                       <Thumbnail src={image.preview} />
                     </Col>
                   ))}
-                  <Col xs={12} sm={12} md={6} lg={6}>
-                    <Button onClick={this.clearDroppedThumbImages}>Clear</Button>
-                  </Col>
                 </Row>
               )
               : null
