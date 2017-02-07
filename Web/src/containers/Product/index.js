@@ -46,6 +46,7 @@ class Product extends React.Component <void, IProps, void> {
 
     this.state = {
       Images: [],
+      Thumb: '',
       droppedImages: [],
       droppedThumbImages: []
     };
@@ -85,7 +86,7 @@ class Product extends React.Component <void, IProps, void> {
   }
 
   onThumbDrop (acceptedFiles, rejectedFiles) {
-    let droppedThumbImages = [...acceptedFiles, ...this.state.droppedThumbImages];
+    let droppedThumbImages = [acceptedFiles[0]];
     this.setState({
       droppedThumbImages
     });
@@ -110,14 +111,18 @@ class Product extends React.Component <void, IProps, void> {
 
   componentWillReceiveProps (nextProps: IProps) {
     this.setState({
-      Images: nextProps.data.Images
+      Images: nextProps.data.Images,
+      Thumb: nextProps.data.Thumb
     });
   }
 
   onSave (values) {
-    let files = [...this.state.droppedImages, ...this.state.droppedThumbImages];
+    let files = [...this.state.droppedThumbImages, ...this.state.droppedImages];
     let isThumbnail = this.state.droppedThumbImages.length > 0;
-    let guitar = Object.assign({}, this.props.data, {Images: this.state.Images}, values);
+    let guitar = Object.assign({}, this.props.data, {
+      Images: this.state.Images,
+      Thumb: this.state.Thumb
+    }, values);
     this.props.saveAsync(guitar)
       .then(() => {
         if (files !== undefined && files.length > 0) {
@@ -138,8 +143,10 @@ class Product extends React.Component <void, IProps, void> {
 
   removeImage (id) {
     let images = _.filter(this.state.Images, image => image !== id);
+    let thumb = (this.state.Thumb === id) ? '' : this.state.Thumb;
     this.setState({
-      Images: images
+      Images: images,
+      Thumb: thumb
     });
   }
 
@@ -188,12 +195,25 @@ class Product extends React.Component <void, IProps, void> {
   }
 
   renderImages () {
+    let images = (this.props.isEdit && this.state.Thumb !== undefined && this.state.Thumb !== null && this.state.Thumb.length > 0) ? [this.state.Thumb] : [];
     if (this.state.Images !== undefined && this.state.Images !== null && this.state.Images.length > 0) {
+      images = [
+        ...images,
+        ...this.state.Images
+      ];
+    }
+    if (images !== undefined && images !== null && images.length > 0) {
       return (
         <Row>
-          {this.state.Images.map(image => {
+          {images.map(image => {
             return (
               <Col key={image} xs={12} sm={6} md={6} lg={3}>
+                {(this.props.isEdit && image === this.state.Thumb)
+                  ? (
+                    <div>Thumb</div>
+                  )
+                  : null
+                }
                 {
                   (this.props.isEdit)
                     ? (<Button bsStyle="danger" className="close" onClick={this.generateRemoveImage(image)}>&times;</Button>)
@@ -306,13 +326,13 @@ class Product extends React.Component <void, IProps, void> {
             (this.props.isEdit)
               ? (
                 <Row>
-                  <Col xs={12} sm={12} md={6} lg={6}>
+                  <Col xs={12} sm={6} md={6} lg={3}>
                     <DropZone onDrop={this.onDrop}>
                       <div>Drop new images here</div>
                     </DropZone>
                   </Col>
                   {this.state.droppedImages.map(image => (
-                    <Col xs={12} sm={12} md={6} lg={6}>
+                    <Col xs={12} sm={6} md={6} lg={3}>
                       {
                         (this.props.isEdit)
                           ? (<Button bsStyle="danger" className="close" onClick={this.generateRemoveDroppedImage(image)}>&times;</Button>)
@@ -329,13 +349,18 @@ class Product extends React.Component <void, IProps, void> {
             (this.props.isEdit)
               ? (
                 <Row>
-                  <Col xs={12} sm={12} md={6} lg={6}>
-                    <DropZone onDrop={this.onThumbDrop}>
-                      <div>Drop new thumbnail image here</div>
-                    </DropZone>
-                  </Col>
+                  {(this.state.droppedThumbImages.length === 0)
+                    ? (
+                      <Col xs={12} sm={6} md={6} lg={3}>
+                        <DropZone onDrop={this.onThumbDrop}>
+                          <div>Drop new thumbnail image here</div>
+                        </DropZone>
+                      </Col>
+                    )
+                    : null
+                  }
                   {this.state.droppedThumbImages.map(image => (
-                    <Col xs={12} sm={12} md={6} lg={6}>
+                    <Col xs={12} sm={6} md={6} lg={3}>
                       {
                         (this.props.isEdit)
                           ? (<Button bsStyle="danger" className="close" onClick={this.generateRemoveDroppedThumbImage(image)}>&times;</Button>)
@@ -354,6 +379,7 @@ class Product extends React.Component <void, IProps, void> {
     );
   }
 
+  // h
   render () {
     return (this.props.ready === false)
       ? (
