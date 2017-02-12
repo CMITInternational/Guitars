@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { PageHeader, Grid, Col, Row, Thumbnail, ButtonGroup, Button, Navbar } from 'react-bootstrap';
+import { PageHeader, Grid, Col, Row, Thumbnail, ButtonGroup, Button, Navbar, Image } from 'react-bootstrap';
 import appActions from '../App/Actions';
 import productActions from './Actions';
 import type IGuitar from '../../models/IGuitar';
@@ -194,32 +194,37 @@ class Product extends React.Component <void, IProps, void> {
     return true;
   }
 
-  renderImages () {
-    let images = (this.props.isEdit && this.state.Thumb !== undefined && this.state.Thumb !== null && this.state.Thumb.length > 0) ? [this.state.Thumb] : [];
-    if (this.state.Images !== undefined && this.state.Images !== null && this.state.Images.length > 0) {
-      images = [
-        ...images,
-        ...this.state.Images
-      ];
-    }
-    if (images !== undefined && images !== null && images.length > 0) {
+  renderThumb () {
+    if (this.state.Thumb) {
+      let image = this.state.Thumb;
       return (
         <Row>
-          {images.map(image => {
+          <Col xs={12} sm={12} md={12} lg={6} lgPush={3} lgPull={3}>
+            {
+              (this.props.isEdit)
+                ? (<Button bsStyle="danger" className="close" onClick={this.generateRemoveImage(image)}>&times;</Button>)
+                : null
+            }
+            <Image thumbnail style={{width: '100%'}} src={`${this.props.app.assetUrl}${this.props.data.Path}/${image}`} />
+          </Col>
+        </Row>
+      );
+    }
+  }
+
+  renderImages () {
+    if (this.state.Images !== undefined && this.state.Images !== null && this.state.Images.length > 0) {
+      return (
+        <Row>
+          {this.state.Images.map(image => {
             return (
               <Col key={image} xs={12} sm={6} md={6} lg={3}>
-                {(this.props.isEdit && image === this.state.Thumb)
-                  ? (
-                    <div>Thumb</div>
-                  )
-                  : null
-                }
                 {
                   (this.props.isEdit)
                     ? (<Button bsStyle="danger" className="close" onClick={this.generateRemoveImage(image)}>&times;</Button>)
                     : null
                 }
-                <Thumbnail src={`${this.props.app.assetUrl}${this.props.data.Path}/${image}`} />
+                <Image thumbnail style={{width: '100%'}} src={`${this.props.app.assetUrl}${this.props.data.Path}/${image}`} />
               </Col>
             );
           })}
@@ -353,7 +358,7 @@ class Product extends React.Component <void, IProps, void> {
                     ? (
                       <Col xs={12} sm={6} md={6} lg={3}>
                         <DropZone onDrop={this.onThumbDrop}>
-                          <div>Drop new thumbnail image here</div>
+                          <div>Drop new feature image here</div>
                         </DropZone>
                       </Col>
                     )
@@ -373,6 +378,7 @@ class Product extends React.Component <void, IProps, void> {
               )
               : null
           }
+          {this.renderThumb()}
           {this.renderImages()}
         </Grid>
       </div>
