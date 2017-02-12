@@ -129,6 +129,8 @@ class Product extends React.Component <void, IProps, void> {
           this.props.saveProductImagesAsync(files, isThumbnail)
             .then(() => {
               this.props.editOff();
+              this.clearDroppedThumbImages();
+              this.clearDroppedImages();
             });
         } else {
           this.props.editOff();
@@ -137,6 +139,8 @@ class Product extends React.Component <void, IProps, void> {
   }
 
   cancelEdit () {
+    this.clearDroppedImages();
+    this.clearDroppedThumbImages();
     this.props.editOff();
     this.props.loadAsync(this.props.id);
   }
@@ -194,26 +198,63 @@ class Product extends React.Component <void, IProps, void> {
     return true;
   }
 
+  // h
   renderThumb () {
-    if (this.state.Thumb) {
-      let image = this.state.Thumb;
-      return (
-        <Panel header="Feature Image">
-          <Grid fluid>
+    let renderImages = () => {
+      return (this.state.droppedThumbImages.length > 0)
+        ? (
+          <Col xs={12} sm={6} md={6} lg={3}>
+            {
+              (this.props.isEdit)
+                ? (<Button bsStyle="danger" className="close" onClick={this.generateRemoveDroppedThumbImage(this.state.droppedThumbImages[0])}>&times;</Button>)
+                : null
+            }
+            <Thumbnail src={this.state.droppedThumbImages[0].preview} />
+          </Col>
+        )
+        : (this.state.Thumb)
+          ? (
+            <Col xs={12} sm={12} md={12} lg={6} lgPush={3} lgPull={3}>
+              {
+                (this.props.isEdit)
+                  ? (<Button bsStyle="danger" className="close" onClick={this.generateRemoveImage(this.state.Thumb)}>&times;</Button>)
+                  : null
+              }
+              <Image thumbnail style={{width: '100%'}} src={`${this.props.app.assetUrl}${this.props.data.Path}/${this.state.Thumb}`} />
+            </Col>
+          )
+          : null;
+    };
+
+    let renderDropZone = () => {
+      return (this.props.isEdit)
+          ? (
             <Row>
-              <Col xs={12} sm={12} md={12} lg={6} lgPush={3} lgPull={3}>
-                {
-                  (this.props.isEdit)
-                    ? (<Button bsStyle="danger" className="close" onClick={this.generateRemoveImage(image)}>&times;</Button>)
-                    : null
-                }
-                <Image thumbnail style={{width: '100%'}} src={`${this.props.app.assetUrl}${this.props.data.Path}/${image}`} />
-              </Col>
+              {(this.state.droppedThumbImages.length === 0)
+                ? (
+                  <Col xs={12} sm={6} md={6} lg={3}>
+                    <DropZone onDrop={this.onThumbDrop}>
+                      <div>Drop new feature image here</div>
+                    </DropZone>
+                  </Col>
+                )
+                : null
+              }
             </Row>
-          </Grid>
-        </Panel>
-      );
-    }
+          )
+          : null;
+    };
+
+    return (
+      <Panel header="Feature Image">
+        <Grid fluid>
+          {renderDropZone()}
+          <Row>
+            {renderImages()}
+          </Row>
+        </Grid>
+      </Panel>
+    );
   }
 
   renderImages () {
@@ -221,7 +262,30 @@ class Product extends React.Component <void, IProps, void> {
       return (
         <Panel header="Other Images">
           <Grid fluid>
+            {
+              (this.props.isEdit)
+                ? (
+                  <Row>
+                    <Col xs={12} sm={6} md={6} lg={3}>
+                      <DropZone onDrop={this.onDrop}>
+                        <div>Drop new images here</div>
+                      </DropZone>
+                    </Col>
+                  </Row>
+                )
+                : null
+            }
             <Row>
+              {this.state.droppedImages.map(image => (
+                <Col xs={12} sm={6} md={6} lg={3}>
+                  {
+                    (this.props.isEdit)
+                      ? (<Button bsStyle="danger" className="close" onClick={this.generateRemoveDroppedImage(image)}>&times;</Button>)
+                      : null
+                  }
+                  <Image thumbnail style={{width: '100%'}} src={image.preview} />
+                </Col>
+              ))}
               {this.state.Images.map(image => {
                 return (
                   <Col key={image} xs={12} sm={6} md={6} lg={3}>
@@ -334,59 +398,6 @@ class Product extends React.Component <void, IProps, void> {
             </p>
           </div>
         </PageHeader>
-        <Grid fluid>
-          {
-            (this.props.isEdit)
-              ? (
-                <Row>
-                  <Col xs={12} sm={6} md={6} lg={3}>
-                    <DropZone onDrop={this.onDrop}>
-                      <div>Drop new images here</div>
-                    </DropZone>
-                  </Col>
-                  {this.state.droppedImages.map(image => (
-                    <Col xs={12} sm={6} md={6} lg={3}>
-                      {
-                        (this.props.isEdit)
-                          ? (<Button bsStyle="danger" className="close" onClick={this.generateRemoveDroppedImage(image)}>&times;</Button>)
-                          : null
-                      }
-                      <Thumbnail src={image.preview} />
-                    </Col>
-                  ))}
-                </Row>
-              )
-              : null
-          }
-          {
-            (this.props.isEdit)
-              ? (
-                <Row>
-                  {(this.state.droppedThumbImages.length === 0)
-                    ? (
-                      <Col xs={12} sm={6} md={6} lg={3}>
-                        <DropZone onDrop={this.onThumbDrop}>
-                          <div>Drop new feature image here</div>
-                        </DropZone>
-                      </Col>
-                    )
-                    : null
-                  }
-                  {this.state.droppedThumbImages.map(image => (
-                    <Col xs={12} sm={6} md={6} lg={3}>
-                      {
-                        (this.props.isEdit)
-                          ? (<Button bsStyle="danger" className="close" onClick={this.generateRemoveDroppedThumbImage(image)}>&times;</Button>)
-                          : null
-                      }
-                      <Thumbnail src={image.preview} />
-                    </Col>
-                  ))}
-                </Row>
-              )
-              : null
-          }
-        </Grid>
         {this.renderThumb()}
         {this.renderImages()}
       </div>
