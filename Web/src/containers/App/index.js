@@ -3,7 +3,7 @@ import connect from 'react-redux/lib/components/connect';
 import { bindActionCreators } from 'redux';
 import appActions from './Actions';
 import Alert from 'react-s-alert';
-import { Navbar, Glyphicon, Button } from 'react-bootstrap';
+import { Navbar, Button } from 'react-bootstrap';
 import AppPropTypes from './PropTypes';
 import type IApp from './IApp';
 import Menu from 'react-burger-menu/lib/menus/stack';
@@ -120,7 +120,7 @@ export class App extends React.Component {
       ? (<div onClick={this.logOut} className="menu-item">LogOut</div>)
       : (<div />);
     let logInButton = (this.props.app.isAdmin === false)
-      ? (<Button bsSize="small" onClick={this.logIn}><Glyphicon glyph="wrench" /></Button>)
+      ? (<span style={{cursor: 'pointer'}} onClick={this.logIn}>.</span>)
       : `${(this.props.app.isAdmin) ? '(Admin)' : ''}`;
     let title = docTitle;
     let brand = (<div>{title} {logInButton}</div>);

@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="191f3123-e516-43b7-8267-59f500984804" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Web/src/containers/Product/index.js" afterPath="$PROJECT_DIR$/Web/src/containers/Product/index.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Web/src/containers/App/index.js" afterPath="$PROJECT_DIR$/Web/src/containers/App/index.js" />
     </list>
     <ignored path="Guitars.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -28,11 +28,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="450">
-      <file leaf-file-name="index.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Web/src/containers/Product/index.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="651">
               <caret line="221" column="35" lean-forward="false" selection-start-line="221" selection-start-column="35" selection-end-line="221" selection-end-column="35" />
+              <folding>
+                <element signature="e#0#26#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Web/src/containers/App/index.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="392">
+              <caret line="122" column="39" lean-forward="false" selection-start-line="122" selection-start-column="39" selection-end-line="122" selection-end-column="39" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
               </folding>
@@ -167,11 +179,11 @@
         <option value="$PROJECT_DIR$/Web/src/containers/App/Reducer.js" />
         <option value="$PROJECT_DIR$/Web/src/containers/Home/index.js" />
         <option value="$PROJECT_DIR$/Web/src/containers/ContactUs/index.js" />
-        <option value="$PROJECT_DIR$/Web/src/containers/App/index.js" />
         <option value="$PROJECT_DIR$/Web/src/containers/Products/index.js" />
         <option value="$PROJECT_DIR$/Web/src/static/themes/philipjbuttrose.css" />
         <option value="$PROJECT_DIR$/Web/src/containers/App/Actions.js" />
         <option value="$PROJECT_DIR$/Web/src/containers/Product/index.js" />
+        <option value="$PROJECT_DIR$/Web/src/containers/App/index.js" />
       </list>
     </option>
   </component>
@@ -302,7 +314,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Product" />
+              <option name="myItemId" value="App" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -567,12 +579,12 @@
       <workItem from="1486467091391" duration="5994000" />
       <workItem from="1486523002751" duration="36000" />
       <workItem from="1486863092351" duration="5376000" />
-      <workItem from="1486885785097" duration="3197000" />
+      <workItem from="1486885785097" duration="4956000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="321615000" />
+    <option name="totallyTimeSpent" value="323374000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-11" y="-11" width="2182" height="1402" extended-state="6" />
@@ -978,13 +990,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Web/src/containers/App/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3175">
-          <caret line="138" column="0" lean-forward="false" selection-start-line="138" selection-start-column="0" selection-end-line="138" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Web/src/containers/App/Actions.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2075">
@@ -1028,6 +1033,16 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="651">
           <caret line="221" column="35" lean-forward="false" selection-start-line="221" selection-start-column="35" selection-end-line="221" selection-end-column="35" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Web/src/containers/App/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="392">
+          <caret line="122" column="39" lean-forward="false" selection-start-line="122" selection-start-column="39" selection-end-line="122" selection-end-column="39" />
           <folding>
             <element signature="e#0#26#0" expanded="true" />
           </folding>
