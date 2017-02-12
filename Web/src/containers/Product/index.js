@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { PageHeader, Grid, Col, Row, Thumbnail, ButtonGroup, Button, Navbar, Image } from 'react-bootstrap';
+import { PageHeader, Grid, Col, Row, Thumbnail, ButtonGroup, Button, Navbar, Image, Panel } from 'react-bootstrap';
 import appActions from '../App/Actions';
 import productActions from './Actions';
 import type IGuitar from '../../models/IGuitar';
@@ -198,27 +198,10 @@ class Product extends React.Component <void, IProps, void> {
     if (this.state.Thumb) {
       let image = this.state.Thumb;
       return (
-        <Row>
-          <Col xs={12} sm={12} md={12} lg={6} lgPush={3} lgPull={3}>
-            {
-              (this.props.isEdit)
-                ? (<Button bsStyle="danger" className="close" onClick={this.generateRemoveImage(image)}>&times;</Button>)
-                : null
-            }
-            <Image thumbnail style={{width: '100%'}} src={`${this.props.app.assetUrl}${this.props.data.Path}/${image}`} />
-          </Col>
-        </Row>
-      );
-    }
-  }
-
-  renderImages () {
-    if (this.state.Images !== undefined && this.state.Images !== null && this.state.Images.length > 0) {
-      return (
-        <Row>
-          {this.state.Images.map(image => {
-            return (
-              <Col key={image} xs={12} sm={6} md={6} lg={3}>
+        <Panel header="Feature Image">
+          <Grid fluid>
+            <Row>
+              <Col xs={12} sm={12} md={12} lg={6} lgPush={3} lgPull={3}>
                 {
                   (this.props.isEdit)
                     ? (<Button bsStyle="danger" className="close" onClick={this.generateRemoveImage(image)}>&times;</Button>)
@@ -226,9 +209,34 @@ class Product extends React.Component <void, IProps, void> {
                 }
                 <Image thumbnail style={{width: '100%'}} src={`${this.props.app.assetUrl}${this.props.data.Path}/${image}`} />
               </Col>
-            );
-          })}
-        </Row>
+            </Row>
+          </Grid>
+        </Panel>
+      );
+    }
+  }
+
+  renderImages () {
+    if (this.state.Images !== undefined && this.state.Images !== null && this.state.Images.length > 0) {
+      return (
+        <Panel header="Other Images">
+          <Grid fluid>
+            <Row>
+              {this.state.Images.map(image => {
+                return (
+                  <Col key={image} xs={12} sm={6} md={6} lg={3}>
+                    {
+                      (this.props.isEdit)
+                        ? (<Button bsStyle="danger" className="close" onClick={this.generateRemoveImage(image)}>&times;</Button>)
+                        : null
+                    }
+                    <Image thumbnail style={{width: '100%'}} src={`${this.props.app.assetUrl}${this.props.data.Path}/${image}`} />
+                  </Col>
+                );
+              })}
+            </Row>
+          </Grid>
+        </Panel>
       );
     } else {
       return null;
@@ -378,9 +386,9 @@ class Product extends React.Component <void, IProps, void> {
               )
               : null
           }
-          {this.renderThumb()}
-          {this.renderImages()}
         </Grid>
+        {this.renderThumb()}
+        {this.renderImages()}
       </div>
     );
   }

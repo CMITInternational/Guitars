@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/Web/src/containers/Product/index.js" line="226" />
+    <bookmark url="file://$PROJECT_DIR$/Web/src/containers/Product/index.js" line="232" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="191f3123-e516-43b7-8267-59f500984804" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Web/src/containers/Product/index.js" afterPath="$PROJECT_DIR$/Web/src/containers/Product/index.js" />
     </list>
     <ignored path="Guitars.iws" />
@@ -32,8 +31,8 @@
       <file leaf-file-name="index.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Web/src/containers/Product/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="405">
-              <caret line="202" column="0" lean-forward="false" selection-start-line="202" selection-start-column="0" selection-end-line="202" selection-end-column="0" />
+            <state relative-caret-position="651">
+              <caret line="221" column="35" lean-forward="false" selection-start-line="221" selection-start-column="35" selection-end-line="221" selection-end-column="35" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
               </folding>
@@ -568,12 +567,12 @@
       <workItem from="1486467091391" duration="5994000" />
       <workItem from="1486523002751" duration="36000" />
       <workItem from="1486863092351" duration="5376000" />
-      <workItem from="1486885785097" duration="1763000" />
+      <workItem from="1486885785097" duration="3197000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="320181000" />
+    <option name="totallyTimeSpent" value="321615000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-11" y="-11" width="2182" height="1402" extended-state="6" />
@@ -1027,8 +1026,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Web/src/containers/Product/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="202" column="0" lean-forward="false" selection-start-line="202" selection-start-column="0" selection-end-line="202" selection-end-column="0" />
+        <state relative-caret-position="651">
+          <caret line="221" column="35" lean-forward="false" selection-start-line="221" selection-start-column="35" selection-end-line="221" selection-end-column="35" />
           <folding>
             <element signature="e#0#26#0" expanded="true" />
           </folding>
