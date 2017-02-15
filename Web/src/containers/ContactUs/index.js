@@ -193,7 +193,7 @@ class ContactUs extends React.Component<void, IProps, void> {
                 {this.renderBusinessHours()}
                 <div className="map">
                   <Image responsive src={`${this.props.app.assetUrl}assets/contact/${this.props.data.Map}`} />
-                  <a className="spot" style={{top: this.props.data.Spot.Top}} href={`${this.props.data.GoogleMap}`} target="_blank"><span /></a>
+                  <a className="spot" style={{top: this.props.data.Spot.Top, left: this.props.data.Spot.Left}} href={`${this.props.data.GoogleMap}`} target="_blank"><span /></a>
                 </div>
               </Col>
             </Row>
