@@ -23,6 +23,18 @@ const setSending = (sending): Action => {
   };
 };
 
+const editOn = (): Action => {
+  return {
+    type: Keys.EDIT_CONTACT_US_ON
+  };
+};
+
+const editOff = (): Action => {
+  return {
+    type: Keys.EDIT_CONTACT_US_OFF
+  };
+};
+
 const loadContactAsync = (): Function => {
   return (dispatch: Function, getState: Function): Promise => {
     return new Promise((resolve: Function, reject: Function): void => {
@@ -30,6 +42,26 @@ const loadContactAsync = (): Function => {
       let apiUrl = getState().app.apiUrl;
       let fullUrl = `${apiUrl}contact`;
       omnifetch(fullUrl)
+        .then(response => {
+          let data = response.body;
+          if (data !== undefined && typeof data === 'object') {
+            dispatch(loadContact(data));
+          }
+          resolve(data);
+        })
+        .catch(reject);
+    });
+  };
+};
+
+const saveContactAsync = (data): Function => {
+  return (dispatch: Function, getState: Function): Promise => {
+    return new Promise((resolve: Function, reject: Function): void => {
+      dispatch(clearContact());
+      let apiUrl = getState().app.apiUrl;
+      let fullUrl = `${apiUrl}contact`;
+      let params = JSON.stringify(data);
+      omniPost(fullUrl, params, 'json')
         .then(response => {
           let data = response.body;
           if (data !== undefined && typeof data === 'object') {
@@ -74,8 +106,11 @@ const sendMessageAsync = (message: IMessage): Function => {
 
 const Actions = {
   loadContactAsync,
+  saveContactAsync,
   sendMessageAsync,
-  setSending
+  setSending,
+  editOff,
+  editOn
 };
 
 export default Actions;

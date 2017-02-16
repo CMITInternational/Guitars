@@ -9,6 +9,12 @@ const ACTION_HANDLERS = {
   [Keys.SET_SENDING]: (state: Object, action: Action): Object => Object.assign({}, state, {
     sending: action.payload,
     isReady: true
+  }),
+  [Keys.EDIT_CONTACT_US_ON]: (state: Object, action: Action): Object => Object.assign({}, state, {
+    isEditing: true
+  }),
+  [Keys.EDIT_CONTACT_US_OFF]: (state: Object, action: Action): Object => Object.assign({}, state, {
+    isEditing: false
   })
 };
 
@@ -17,7 +23,8 @@ export const initialState = {
   data: {
 
   },
-  isReady: false
+  isReady: false,
+  isEditing: false
 };
 
 export default function Reducer (state: object = initialState, action: Action): object {

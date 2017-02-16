@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { PageHeader, Grid, Row, Col, Button, Image } from 'react-bootstrap';
+import { Navbar, ButtonGroup, PageHeader, Grid, Row, Col, Button, Image } from 'react-bootstrap';
 import appActions from '../App/Actions';
 import type IApp from '../App/IApp';
 import AppPropTypes from '../App/PropTypes';
@@ -16,11 +16,15 @@ type IProps = {
   app: IApp,
   sending: string,
   ready: boolean,
+  isEdit: boolean,
   data: IContactUs,
   showHeader: Function,
   loadAsync: Function,
   sendAsync: Function,
-  setSending: Function
+  setSending: Function,
+  editOn: Function,
+  editOff: Function,
+  saveContactAsync: Function
 }
 
 class ContactUs extends React.Component<void, IProps, void> {
@@ -28,11 +32,15 @@ class ContactUs extends React.Component<void, IProps, void> {
     app: React.PropTypes.shape(AppPropTypes).isRequired,
     sending: React.PropTypes.string.isRequired,
     ready: React.PropTypes.bool.isRequired,
+    isEdit: React.PropTypes.bool.isRequired,
     data: React.PropTypes.shape(ContactUsPropTypes).isRequired,
     showHeader: React.PropTypes.func.isRequired,
     loadAsync: React.PropTypes.func.isRequired,
     sendAsync: React.PropTypes.func.isRequired,
-    setSending: React.PropTypes.func.isRequired
+    setSending: React.PropTypes.func.isRequired,
+    editOn: React.PropTypes.func.isRequired,
+    editOff: React.PropTypes.func.isRequired,
+    saveContactAsync: React.PropTypes.func.isRequired
   };
 
   constructor (props: IProps) {
@@ -52,6 +60,10 @@ class ContactUs extends React.Component<void, IProps, void> {
     this.renderSendingButtonText = this.renderSendingButtonText.bind(this);
     this.renderSendingButtonStyle = this.renderSendingButtonStyle.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
+    this.cancelEdit = this.cancelEdit.bind(this);
+    this.renderAdminButtons = this.renderAdminButtons.bind(this);
+    this.onSave = this.onSave.bind(this);
+    this.renderHeader = this.renderHeader.bind(this);
   }
 
   componentWillMount () {
@@ -139,15 +151,95 @@ class ContactUs extends React.Component<void, IProps, void> {
     return buttonStyle;
   }
 
+  cancelEdit () {
+    this.props.editOff();
+    this.props.loadAsync();
+  }
+
+  onSave (values) {
+    let data = Object.assign({}, this.props.data, values);
+
+    this.props.saveContactAsync(data)
+      .then(() => {
+        this.props.editOff();
+      });
+  }
+
+  renderAdminButtons () {
+    return (this.props.app.isAdmin)
+      ? (
+        <Navbar fixedTop style={{top: '50px'}}>
+          <Navbar.Header>
+            <Navbar.Form pullLeft>
+              {
+                (this.props.isEdit)
+                  ? (
+                    <ButtonGroup>
+                      <Button type="submit" bsStyle="primary">Save</Button>
+                      <Button onClick={this.cancelEdit} bsStyle="danger">Cancel</Button>
+                    </ButtonGroup>
+                  )
+                  : (
+                    <Button onClick={this.props.editOn} bsStyle="primary">Edit</Button>
+                  )
+              }
+            </Navbar.Form>
+          </Navbar.Header>
+        </Navbar>
+      )
+      : null;
+  }
+
+  renderHeader () {
+    return (
+      <div>
+        {this.renderAdminButtons()}
+        <PageHeader>
+          <div className="section-header">
+            <h1 className="section-title">Contact Us</h1>
+            <p className="section-description lead">
+              {(this.props.isEdit)
+                ? (
+                  <ValidatedInput
+                    name="Header1"
+                    type="text"
+                    defaultValue={this.props.data.Header1}
+                  />
+                )
+                : this.props.data.Header1}
+            </p>
+            <p className="section-description">
+              {
+                (this.props.isEdit)
+                  ? (
+                    <ValidatedInput
+                      name="Header2"
+                      componentClass="textarea"
+                      defaultValue={this.props.data.Header2}
+                    />
+                  )
+                  : this.props.data.Header2
+              }
+            </p>
+          </div>
+        </PageHeader>
+      </div>
+    );
+  }
+
   render () {
     return this.props.ready
       ? (
         <div>
-          <PageHeader>
-            <div className="section-header">
-              <h1 className="section-title">Contact Us</h1>
-            </div>
-          </PageHeader>
+          {
+            (this.props.isEdit)
+              ? (
+                <Form onValidSubmit={this.onSave}>
+                  {this.renderHeader()}
+                </Form>
+              )
+              : this.renderHeader()
+          }
           <Grid fluid>
             <Row>
               <Col lg={6} md={6} sm={6} xs={6}>
@@ -210,7 +302,8 @@ const mapStateToProps = (state) => ({
   app: state.app,
   sending: state.contactus.sending,
   data: state.contactus.data,
-  ready: state.contactus.isReady
+  ready: state.contactus.isReady,
+  isEdit: state.contactus.isEditing
 });
 
 const mapDispatchToProps = (dispatch: Function) => {
@@ -218,7 +311,10 @@ const mapDispatchToProps = (dispatch: Function) => {
     showHeader: appActions.showHeaderAsync,
     loadAsync: contactUsActions.loadContactAsync,
     sendAsync: contactUsActions.sendMessageAsync,
-    setSending: contactUsActions.setSending
+    setSending: contactUsActions.setSending,
+    editOn: contactUsActions.editOn,
+    editOff: contactUsActions.editOff,
+    saveContactAsync: contactUsActions.saveContactAsync
   }, dispatch);
 };
 
