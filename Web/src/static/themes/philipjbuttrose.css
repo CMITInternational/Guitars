@@ -1658,8 +1658,7 @@ a.btn-theme:focus{
 }
 
 .map {
-    position:relative;
-    left:-10%;
+    left:0%;
 }
 
 .map .spot {

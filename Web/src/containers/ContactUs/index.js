@@ -157,7 +157,20 @@ class ContactUs extends React.Component<void, IProps, void> {
   }
 
   onSave (values) {
-    let data = Object.assign({}, this.props.data, values);
+    let data = Object.assign({}, this.props.data,
+      {
+        Header1: values.Header1,
+        Header2: values.Header2,
+        Address: values.Address.split('\n'),
+        BusinessHours: values.BusinessHours.split('\n').map(b => {
+          let bSplit = b.split(': ');
+          return {
+            Day: bSplit[0],
+            Hours: bSplit[1]
+          };
+        })
+      }
+    );
 
     this.props.saveContactAsync(data)
       .then(() => {
@@ -221,6 +234,37 @@ class ContactUs extends React.Component<void, IProps, void> {
                   : this.props.data.Header2
               }
             </p>
+            {(this.props.isEdit)
+              ? (
+                <div>
+                  <ValidatedInput
+                    name="Address"
+                    label="Address"
+                    componentClass="textarea"
+                    defaultValue={this.props.data.Address.join('\n')}
+                  />
+                  <ValidatedInput
+                    name="Phone"
+                    label="Phone"
+                    componentClass="textarea"
+                    defaultValue={this.props.data.Phone}
+                  />
+                  <ValidatedInput
+                    name="Email"
+                    label="Email"
+                    componentClass="textarea"
+                    defaultValue={this.props.data.Email}
+                  />
+                  <ValidatedInput
+                    name="BusinessHours"
+                    label="BusinessHours"
+                    componentClass="textarea"
+                    defaultValue={this.props.data.BusinessHours.map(b => `${b.Day}: ${b.Hours}`).join('\n')}
+                  />
+                </div>
+              )
+              : null
+            }
           </div>
         </PageHeader>
       </div>
@@ -242,7 +286,7 @@ class ContactUs extends React.Component<void, IProps, void> {
           }
           <Grid fluid>
             <Row>
-              <Col lg={6} md={6} sm={6} xs={6}>
+              <Col lg={6} md={6} sm={12} xs={12}>
                 <Form onValidSubmit={this.sendMessage}>
                   <ValidatedInput
                     name="name"
@@ -270,7 +314,7 @@ class ContactUs extends React.Component<void, IProps, void> {
                   </Button>
                 </Form>
               </Col>
-              <Col lg={5} lgOffset={1} md={5} mdOffset={1} sm={6} smOffset={1} xs={6} xsOffset={1}>
+              <Col lg={6} md={6} sm={12} xs={12}>
                 {this.renderAddress()}
                 <Row>
                   <Col lg={12} md={12} sm={12} xs={12}>
@@ -283,10 +327,14 @@ class ContactUs extends React.Component<void, IProps, void> {
                   </Col>
                 </Row>
                 {this.renderBusinessHours()}
-                <div className="map">
-                  <Image responsive src={`${this.props.app.assetUrl}assets/contact/${this.props.data.Map}`} />
-                  <a className="spot" style={{top: this.props.data.Spot.Top, left: this.props.data.Spot.Left}} href={`${this.props.data.GoogleMap}`} target="_blank"><span /></a>
-                </div>
+                <Row>
+                  <Col lg={12} md={12} sm={12} xs={12}>
+                    <div className="map">
+                      <Image style={{width: '90%'}} src={`${this.props.app.assetUrl}assets/contact/${this.props.data.Map}`} />
+                      <a className="spot" style={{top: this.props.data.Spot.Top, left: this.props.data.Spot.Left}} href={`${this.props.data.GoogleMap}`} target="_blank"><span /></a>
+                    </div>
+                  </Col>
+                </Row>
               </Col>
             </Row>
           </Grid>
