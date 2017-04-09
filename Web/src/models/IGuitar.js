@@ -9,7 +9,8 @@ type IGuitar = {
   Classes: List<string>,
   Images: List<string>,
   Path: string,
-  Thumb: string
+  Thumb: string,
+  Audio: string
 };
 
 export default IGuitar;

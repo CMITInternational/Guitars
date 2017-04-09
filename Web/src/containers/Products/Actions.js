@@ -29,7 +29,10 @@ const loadProductsAsync = (): Function => {
           }
           resolve(data);
         })
-        .catch(reject);
+        .catch((err) => {
+          console.log('loadProductsAsync failed');
+          reject(err);
+        });
     });
   };
 };

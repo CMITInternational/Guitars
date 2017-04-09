@@ -120,71 +120,70 @@ namespace Web.Controllers
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
             }
 
-            var imgRootPath = PortfolioBase;
             var bodyPartTempDir = HttpContext.Current.Server.MapPath("~/App_Data");
             var provider = new MultipartFormDataStreamProvider(bodyPartTempDir);
 
-                var postedProject = String.Empty;
-                var isThumbNail = false;
+            var postedProject = String.Empty;
+            var isThumbNail = false;
 
-                // Read the form data and return an async task.
-                await Request.Content.ReadAsMultipartAsync(provider);
+            // Read the form data and return an async task.
+            await Request.Content.ReadAsMultipartAsync(provider);
 
-                // This illustrates how to get the form data.
-                if (provider.FormData.AllKeys.Any(key => key.Equals("Project")))
+            // This illustrates how to get the form data.
+            if (provider.FormData.AllKeys.Any(key => key.Equals("Project")))
+            {
+                postedProject = provider.FormData.GetValues("Project").FirstOrDefault();
+            }
+            if (provider.FormData.AllKeys.Any(key => key.Equals("IsThumbNail")))
+            {
+                isThumbNail = bool.Parse(provider.FormData.GetValues("IsThumbNail").FirstOrDefault());
+            }
+
+            if (string.IsNullOrEmpty(postedProject)) throw new HttpResponseException(HttpStatusCode.BadRequest);
+
+            var portfolio = GetPortfolio(postedProject);
+            var portfolioStore = Path.Combine(PortfolioBase, postedProject);
+            // This illustrates how to get the file names for uploaded files.
+            foreach (var file in provider.FileData)
+            {
+                var postedFile = new FileInfo(file.LocalFileName);
+                var fileCategory = file.Headers.ContentDisposition.FileName.Contains("mp3") ? "audio" : "images";
+
+                var portfolioImageStore = Path.Combine(portfolioStore, fileCategory);
+                var fileName = Path.Combine(fileCategory,file.Headers.ContentDisposition.FileName.Replace("\"",""));
+                var fileSavePath = Path.Combine(portfolioStore, fileName);
+                var webFileName = fileName.Replace("\\", "/");
+
+                if (!Directory.Exists(portfolioImageStore))
                 {
-                    postedProject = provider.FormData.GetValues("Project").FirstOrDefault();
-                }
-                if (provider.FormData.AllKeys.Any(key => key.Equals("IsThumbNail")))
-                {
-                    isThumbNail = bool.Parse(provider.FormData.GetValues("IsThumbNail").FirstOrDefault());
-                }
-
-                if (string.IsNullOrEmpty(postedProject)) throw new HttpResponseException(HttpStatusCode.BadRequest);
-
-                // This illustrates how to get the file names for uploaded files.
-                foreach (var file in provider.FileData)
-                {
-                    var postedFile = new FileInfo(file.LocalFileName);
-
-                    var portfolio = GetPortfolio(postedProject);
-                    var fileName = Path.Combine("images",file.Headers.ContentDisposition.FileName.Replace("\"",""));
-                    var portfolioStore = Path.Combine(imgRootPath, postedProject);
-                    var fileSavePath = Path.Combine(portfolioStore, fileName);
-                    var webFileName = fileName.Replace("\\", "/");
-
-                    var portfolioImageStore = Path.Combine(portfolioStore, "images");
-                    if (!Directory.Exists(portfolioImageStore))
-                    {
-                        Directory.CreateDirectory(portfolioImageStore);
-                    }
-
-                    if (File.Exists(fileSavePath))
-                    {
-                        File.Delete(fileSavePath);
-                    }
-                    File.Copy(postedFile.FullName, fileSavePath);
-
-                    if (isThumbNail)
-                    {
-                        portfolio.Thumb = webFileName;
-                        isThumbNail = false;
-                    }
-                    else
-                    {
-                        if (portfolio.Images == null)
-                        {
-                            portfolio.Images = new List<string>();
-                        }
-                        if (!portfolio.Images.Contains(webFileName))
-                        {
-                            portfolio.Images.Add(webFileName);
-                        }
-                    }
-                    Post(portfolio);
+                    Directory.CreateDirectory(portfolioImageStore);
                 }
 
-                return Get(postedProject);
+                if (File.Exists(fileSavePath))
+                {
+                    File.Delete(fileSavePath);
+                }
+                File.Copy(postedFile.FullName, fileSavePath);
+
+                if (isThumbNail)
+                {
+                    portfolio.Thumb = webFileName;
+                    isThumbNail = false;
+                }
+                else
+                {
+                    if (portfolio.Images == null)
+                    {
+                        portfolio.Images = new List<string>();
+                    }
+                    if (!portfolio.Images.Contains(webFileName))
+                    {
+                        portfolio.Images.Add(webFileName);
+                    }
+                }
+            }
+            Post(portfolio);
+            return Get(postedProject);
         }
 
         [Route("api/portfolio/removeImage")]

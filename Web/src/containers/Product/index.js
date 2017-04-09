@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { PageHeader, Grid, Col, Row, Thumbnail, ButtonGroup, Button, Navbar, Image, Panel } from 'react-bootstrap';
+import { PageHeader, Grid, Col, Row, Thumbnail, ButtonGroup, Button, Navbar, Panel } from 'react-bootstrap';
 import appActions from '../App/Actions';
 import productActions from './Actions';
 import type IGuitar from '../../models/IGuitar';
@@ -11,6 +11,7 @@ import AppPropTypes from '../App/PropTypes';
 import { Form, ValidatedInput, FileValidator } from '../../components/ValidatedInput';
 import _ from 'lodash';
 import DropZone from 'react-dropzone';
+import ReactAudioPlayer from 'react-audio-player';
 
 type IProps = {
   id: string,
@@ -198,6 +199,12 @@ class Product extends React.Component <void, IProps, void> {
     return true;
   }
 
+  renderMedia (src: string, type: string) {
+    return (type !== undefined && type.includes('mp3') || src.includes('mp3'))
+          ? <ReactAudioPlayer src={src} />
+          : <Thumbnail src={src} />;
+  }
+
   // h
   renderThumb () {
     let renderImages = () => {
@@ -209,7 +216,7 @@ class Product extends React.Component <void, IProps, void> {
                 ? (<Button bsStyle="danger" className="close" onClick={this.generateRemoveDroppedThumbImage(this.state.droppedThumbImages[0])}>&times;</Button>)
                 : null
             }
-            <Thumbnail src={this.state.droppedThumbImages[0].preview} />
+            {this.renderMedia(this.state.droppedThumbImages[0].preview, this.state.droppedThumbImages[0].type)}
           </Col>
         )
         : (this.state.Thumb)
@@ -220,7 +227,7 @@ class Product extends React.Component <void, IProps, void> {
                   ? (<Button bsStyle="danger" className="close" onClick={this.generateRemoveImage(this.state.Thumb)}>&times;</Button>)
                   : null
               }
-              <Image thumbnail style={{width: '100%'}} src={`${this.props.app.assetUrl}${this.props.data.Path}/${this.state.Thumb}`} />
+              {this.renderMedia(`${this.props.app.assetUrl}${this.props.data.Path}/${this.state.Thumb}`)}
             </Col>
           )
           : null;
@@ -234,7 +241,7 @@ class Product extends React.Component <void, IProps, void> {
                 ? (
                   <Col xs={12} sm={6} md={6} lg={3}>
                     <DropZone onDrop={this.onThumbDrop}>
-                      <div>Drop new feature image here</div>
+                      <div>Drop new feature media here</div>
                     </DropZone>
                   </Col>
                 )
@@ -246,7 +253,7 @@ class Product extends React.Component <void, IProps, void> {
     };
 
     return (
-      <Panel header="Feature Image">
+      <Panel header="Feature Media">
         <Grid fluid>
           {renderDropZone()}
           <Row>
@@ -258,53 +265,52 @@ class Product extends React.Component <void, IProps, void> {
   }
 
   renderImages () {
-    if (this.state.Images !== undefined && this.state.Images !== null && this.state.Images.length > 0) {
-      return (
-        <Panel header="Other Images">
-          <Grid fluid>
-            {
-              (this.props.isEdit)
-                ? (
-                  <Row>
-                    <Col xs={12} sm={6} md={6} lg={3}>
-                      <DropZone onDrop={this.onDrop}>
-                        <div>Drop new images here</div>
-                      </DropZone>
-                    </Col>
-                  </Row>
-                )
-                : null
-            }
-            <Row>
-              {this.state.droppedImages.map(image => (
+    return (
+      <Panel header="Other Media">
+        <Grid fluid>
+          {
+            (this.props.isEdit)
+              ? (
+                <Row>
+                  <Col xs={12} sm={6} md={6} lg={3}>
+                    <DropZone onDrop={this.onDrop}>
+                      <div>Drop new media here</div>
+                    </DropZone>
+                  </Col>
+                </Row>
+              )
+              : null
+          }
+          <Row>
+            {this.state.droppedImages.map(image => (
+              <Col xs={12} sm={6} md={6} lg={3}>
+                {
+                  (this.props.isEdit)
+                    ? (<Button bsStyle="danger" className="close" onClick={this.generateRemoveDroppedImage(image)}>&times;</Button>)
+                    : null
+                }
+                {this.renderMedia(image.preview, image.type)}
+              </Col>
+            ))}
+          </Row>
+          <Row>
+            {(this.state.Images !== undefined && this.state.Images !== null)
+              ? this.state.Images.map(image => (
                 <Col xs={12} sm={6} md={6} lg={3}>
                   {
                     (this.props.isEdit)
-                      ? (<Button bsStyle="danger" className="close" onClick={this.generateRemoveDroppedImage(image)}>&times;</Button>)
+                      ? (<Button bsStyle="danger" className="close" onClick={this.generateRemoveImage(image)}>&times;</Button>)
                       : null
                   }
-                  <Image thumbnail style={{width: '100%'}} src={image.preview} />
+                  {this.renderMedia(`${this.props.app.assetUrl}${this.props.data.Path}/${image}`)}
                 </Col>
-              ))}
-              {this.state.Images.map(image => {
-                return (
-                  <Col key={image} xs={12} sm={6} md={6} lg={3}>
-                    {
-                      (this.props.isEdit)
-                        ? (<Button bsStyle="danger" className="close" onClick={this.generateRemoveImage(image)}>&times;</Button>)
-                        : null
-                    }
-                    <Image thumbnail style={{width: '100%'}} src={`${this.props.app.assetUrl}${this.props.data.Path}/${image}`} />
-                  </Col>
-                );
-              })}
-            </Row>
-          </Grid>
-        </Panel>
-      );
-    } else {
-      return null;
-    }
+              ))
+              : null
+            }
+          </Row>
+        </Grid>
+      </Panel>
+    );
   }
 
   renderAdminButtons () {

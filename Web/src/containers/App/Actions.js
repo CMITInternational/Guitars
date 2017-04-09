@@ -24,6 +24,8 @@ const loadAppConfig = (data): Action => {
 const loadAppAsync = (): Function => {
   return (dispatch: Function, getState: Function): Promise => {
     return new Promise((resolve: Function, reject: Function): void => {
+      console.log('App load');
+
       dispatch(clearAppReady());
       fetch('/appConfig.json', {
         mode: 'cors',
@@ -44,7 +46,10 @@ const loadAppAsync = (): Function => {
           dispatch(setAppReady());
           resolve();
         })
-        .catch(reject);
+        .catch((err) => {
+          console.log('appConfig fetch failed');
+          reject(err);
+        });
     });
   };
 };

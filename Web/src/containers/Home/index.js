@@ -145,7 +145,7 @@ class Home extends React.Component<void, IProps, void> {
                   <p>{this.state.frontText.collection[this.state.frontText.index]}</p>
                 </div>
                 <div className="first-line">
-                  <button style={{background: 'none', border: 'none'}} onClick={this.props.redirectToProducts}>Click Here To Enter</button>
+                  <button id="btnEnter" style={{background: 'none', border: 'none'}} onClick={this.props.redirectToProducts}>Click Here To Enter</button>
                 </div>
               </div>
             </div>

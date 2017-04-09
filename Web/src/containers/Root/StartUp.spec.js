@@ -2,79 +2,67 @@
  * Created by Darcy on 18/08/2016.
  */
 import React from 'react'
+
+import { createHistory } from 'history';
+import { useRouterHistory } from 'react-router';
+import { syncHistoryWithStore } from 'react-router-redux';
+import makeRoutes from '../../routes';
+import Root from './';
+import configureStore from '../configureStore';
+import { routerActions } from 'react-router-redux';
+
 import {mount, render, shallow} from 'enzyme'
 import chai, {expect} from 'chai';
 import chaiEnzyme from 'chai-enzyme'
-import configureStore from 'redux-mock-store'
-import thunk from 'redux-thunk'
-import { connect, Provider } from 'react-redux';
-import { bindActionCreators } from 'redux';
+
+import fetchMock from 'fetch-mock'
+
+// Configure history for react-router
+const browserHistory = useRouterHistory(createHistory)({
+  basename: __BASENAME__
+});
+
+// Create redux store and sync with react-router-redux. We have installed the
+// react-router-redux reducer under the key "router" in src/routes/index.js,
+// so we need to provide a custom `selectLocationState` to inform
+// react-router-redux of its location.
+let initialState = window.__INITIAL_STATE__;
+// comment the following three lines to remove persistence of state
+const store = configureStore(initialState, browserHistory);
+const history = syncHistoryWithStore(browserHistory, store, {
+  selectLocationState: (state) => state.router
+});
+
+// Now that we have the Redux store, we can create our routes. We provide
+// the store to the route definitions so that routes have access to it for
+// hooks such as `onEnter`.
+const routes = makeRoutes(store);
 
 chai.use(chaiEnzyme()) // Note the invocation at the end
 
-const middlewares = [thunk];
-const mockStore = configureStore(middlewares);
-const store = mockStore({
-  results: false
-});
-
-const setResults = (data): Action => {
-  return {
-    type: 'GET_RESULTS',
-    payload: data
+fetchMock.get('/appConfig.json', {
+    "ProjectSetting": "Guitars",
+    "clientAppSettings": {
+      "build": "0.0.0.0",
+      "apiUrl": "http://localhost:61154/api/",
+      "assetUrl": "http://localhost:61154/",
+      "admin": "bkllTXRlTA=="
+    }
   }
-};
+);
 
-const loadResults = (): Function => {
-  return (dispatch: Function, getState: Function): Promise => {
-    return new Promise((resolve: Function): void => {
-      dispatch(setResults('hello'));
-      resolve('done');
-    });
-  }
-};
+fetchMock.get('http://localhost:61154/api/portfolio',{});
 
-class Fixture extends React.Component {
-  static propTypes = {
-    results: React.PropTypes.any,
-    loader: React.PropTypes.func
-  };
+describe('Root', () => {
+  it('should mount', (done: Function) => {
+    const wrapper = mount(<Root history={history} routes={routes} store={store} />);
 
-  render () {
-    return (
-      <div>
-        <input id='checked' defaultChecked />
-        <input id='not' defaultChecked={false} />
-        <input id='results' defaultChecked={this.props.results} />
-        <button id="clickMe" onClick={this.props.loader}>Go</button>
-      </div>
-    )
-  }
-}
+    store.dispatch(routerActions.push('/products'));
 
-const mapStateToProps = (state) => ({
-  results: state.results
-});
+    console.log(wrapper.debug());
 
-const mapDispatchToProps = (dispatch: Function) => {
-  return bindActionCreators({
-    loader: loadResults
-  }, dispatch);
-};
+    expect(true).to.be.true;
 
-
-const ConnectedFixture = connect(mapStateToProps, mapDispatchToProps)(Fixture);
-
-const wrapper = mount(<Provider store={store}><ConnectedFixture /></Provider>) // mount/render/shallow when applicable
-
-describe('fixture',() => {
-  it('should set checked to true',() => {
-    expect(wrapper.find('#checked')).to.be.checked();
-  });
-  it('should set not to false',() => {
-    expect(wrapper.find('#not')).to.not.be.checked();
-  });
-  it('should set results to false',() => {
-    expect(wrapper.find('#results')).to.not.be.checked();
+    done();
   });
 });

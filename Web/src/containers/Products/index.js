@@ -10,6 +10,7 @@ import type IApp from '../App/IApp';
 import GuitarListPropTypes from '../../models/GuitarListPropTypes';
 import type IGuitarList from '../../models/IGuitarList';
 import appActions from '../App/Actions';
+import ReactAudioPlayer from 'react-audio-player';
 
 type IProps = {
   app: IApp,
@@ -72,6 +73,8 @@ class Products extends React.Component<void, IProps, void> {
 
   renderGuitar (guitar) {
     let thumbUrl = `${this.props.app.assetUrl}${guitar.Path}/${guitar.Thumb}`;
+    let audioFiles = guitar.Images.filter(image => image.includes('mp3'));
+    let audioUrl = (audioFiles.length > 0) ? `${this.props.app.assetUrl}${guitar.Path}/${audioFiles[0]}` : '';
 
     return (
       <Col xs={12} sm={6} md={6} lg={3} key={guitar.Id}>
@@ -83,6 +86,11 @@ class Products extends React.Component<void, IProps, void> {
         <Thumbnail src={thumbUrl}>
           <h3>{guitar.Title}</h3>
           <p>{guitar.Description}</p>
+          {
+            (audioUrl.length > 0)
+              ? <p><ReactAudioPlayer src={audioUrl} /></p>
+              : null
+          }
           <p>
             <Button onClick={this.generateRouteToProduct(guitar)} bsStyle="primary">More Details</Button>&nbsp;
           </p>

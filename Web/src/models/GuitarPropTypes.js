@@ -11,7 +11,8 @@ const GuitarPropTypes = {
   Classes: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
   Images: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
   Path: React.PropTypes.string.isRequired,
-  Thumb: React.PropTypes.string.isRequired
+  Thumb: React.PropTypes.string.isRequired,
+  Audio: React.PropTypes.string.isRequired
 };
 
 export default GuitarPropTypes;
